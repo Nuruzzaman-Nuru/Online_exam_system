@@ -1,51 +1,47 @@
-// Enhanced Online Exam System
+// Enhanced Online Exam System - cleaned and DOM-safe
 
-// Quiz state
+// State
 let currentIndex = 0;
 let userAnswers = {};
-let timeLeft = 30 * 60; // 30 minutes
+let timeLeft = 30 * 60; // default 30 minutes
 let timerInterval = null;
 
-// UI Elements
-const authSection = document.getElementById('authSection');
-const authContainer = document.getElementById('authContainer');
-const adminDashboard = document.getElementById('adminDashboard');
-const teacherDashboard = document.getElementById('teacherDashboard');
-const studentDashboard = document.getElementById('studentDashboard');
-const quizSection = document.getElementById('quizSection');
-const questionArea = document.getElementById('question-area');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const submitBtn = document.getElementById('submitBtn');
-const timerEl = document.getElementById('timer');
-const currentEl = document.getElementById('current');
-const totalEl = document.getElementById('total');
-const resultSection = document.getElementById('result');
-const scoreText = document.getElementById('scoreText');
-const details = document.getElementById('details');
+// DOM references (filled on load)
+let authContainer = null;
+let authSection = null;
+let adminDashboard = null;
+let teacherDashboard = null;
+let studentDashboard = null;
+let quizSection = null;
+let questionArea = null;
+let prevBtn = null;
+let nextBtn = null;
+let submitBtn = null;
+let timerEl = null;
+let currentEl = null;
+let totalEl = null;
+let resultSection = null;
+let scoreText = null;
+let details = null;
 
-// Navigation and UI Management
 function toggleMenu() {
-    const navLinks = document.getElementById('navLinks');
-    navLinks.classList.toggle('show');
+    // toggle visibility for center links and actions on small screens
+    const center = document.getElementById('navCenter');
+    const actions = document.getElementById('navActions');
+    if (center) center.classList.toggle('show');
+    if (actions) actions.classList.toggle('show');
 }
-
-<<<<<<< HEAD
-function showAuth() {
-    document.getElementById('homeSection').classList.add('hidden');
-    document.getElementById('authContainer').classList.remove('hidden');
-=======
 
 // Open the auth container and optionally show a specific panel (login/signup/admin)
 function openAuthAndShow(panel) {
     document.getElementById('homeSection').classList.add('hidden');
-    authContainer.classList.remove('hidden');
-    // normalize short names to actual panel ids
+    if (authContainer) authContainer.classList.remove('hidden');
+
     let target = panel;
     if (panel === 'login') target = 'loginForm';
     if (panel === 'signup') target = 'signupForm';
     if (panel === 'admin') target = 'adminForm';
-    // switch tabs
+
     document.querySelectorAll('.auth-tabs .tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.auth-panel').forEach(p => p.classList.add('hidden'));
     if (target) {
@@ -54,32 +50,38 @@ function openAuthAndShow(panel) {
         const panelEl = document.getElementById(target);
         if (panelEl) panelEl.classList.remove('hidden');
     }
->>>>>>> 56a26c6 (Initial commit)
 }
 
 function showHome() {
     document.getElementById('homeSection').classList.remove('hidden');
-<<<<<<< HEAD
-    document.getElementById('authContainer').classList.add('hidden');
-=======
-    authContainer.classList.add('hidden');
->>>>>>> 56a26c6 (Initial commit)
+    if (authContainer) authContainer.classList.add('hidden');
 }
 
-// Check authentication status on load
+// Wire up after DOM ready
 window.addEventListener('load', () => {
-    const currentUser = auth.getCurrentUser();
-    if (currentUser) {
-        showDashboard();
-    } else {
-        showHome();
-    }
-<<<<<<< HEAD
-=======
+    // element refs
+    authContainer = document.getElementById('authContainer');
+    authSection = document.getElementById('authSection');
+    adminDashboard = document.getElementById('adminDashboard');
+    teacherDashboard = document.getElementById('teacherDashboard');
+    studentDashboard = document.getElementById('studentDashboard');
+    quizSection = document.getElementById('quizSection');
+    questionArea = document.getElementById('question-area');
+    prevBtn = document.getElementById('prevBtn');
+    nextBtn = document.getElementById('nextBtn');
+    submitBtn = document.getElementById('submitBtn');
+    timerEl = document.getElementById('timer');
+    currentEl = document.getElementById('current');
+    totalEl = document.getElementById('total');
+    resultSection = document.getElementById('result');
+    scoreText = document.getElementById('scoreText');
+    details = document.getElementById('details');
+
     // footer year
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
-    // wire auth tab clicks
+
+    // auth tabs
     document.querySelectorAll('.auth-tabs .tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.auth-tabs .tab').forEach(t => t.classList.remove('active'));
@@ -90,7 +92,19 @@ window.addEventListener('load', () => {
             if (panelEl) panelEl.classList.remove('hidden');
         });
     });
->>>>>>> 56a26c6 (Initial commit)
+
+    // button wiring (guarding in case elements missing)
+    if (prevBtn) prevBtn.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); }});
+    if (nextBtn) nextBtn.addEventListener('click', () => { const questions = questionManager.getQuestions(); if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }});
+    if (submitBtn) submitBtn.addEventListener('click', () => { if (confirm('Are you sure you want to submit your exam?')) submitQuiz(); });
+
+    // initial view depending on auth state (auth.js expected)
+    try {
+        const currentUser = auth.getCurrentUser();
+        if (currentUser) showDashboard(); else showHome();
+    } catch (e) {
+        showHome();
+    }
 });
 
 // Authentication handlers
@@ -107,8 +121,6 @@ function handleLogin(event) {
     }
 }
 
-<<<<<<< HEAD
-=======
 function handleAdminLogin(event) {
     event.preventDefault();
     const username = document.getElementById('adminUsername').value;
@@ -122,7 +134,6 @@ function handleAdminLogin(event) {
     }
 }
 
->>>>>>> 56a26c6 (Initial commit)
 function handleSignup(event) {
     event.preventDefault();
     const userData = {
@@ -136,6 +147,7 @@ function handleSignup(event) {
 
     try {
         auth.signup(userData);
+
         const credentialsHtml = `
             <div class="credentials-popup">
                 <h3>✅ Account Created Successfully!</h3>
@@ -144,77 +156,73 @@ function handleSignup(event) {
                     <div class="credential-item">
                         <span>Username:</span>
                         <code>${userData.username}</code>
-                        <button onclick="copyToClipboard('${userData.username}')" class="copy-btn">Copy</button>
+                        <button class="copy-btn" data-value="${userData.username}">Copy</button>
                     </div>
                     <div class="credential-item">
                         <span>Password:</span>
                         <code>${userData.password}</code>
-                        <button onclick="copyToClipboard('${userData.password}')" class="copy-btn">Copy</button>
+                        <button class="copy-btn" data-value="${userData.password}">Copy</button>
                     </div>
                 </div>
                 <p class="save-note">Please save these credentials securely!</p>
-                <button onclick="closeCredentials()" class="btn primary">Got it!</button>
+                <button class="btn primary" id="closeCredBtn">Got it!</button>
             </div>
         `;
-        
+
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
         overlay.innerHTML = credentialsHtml;
         document.body.appendChild(overlay);
-        document.getElementById('signupForm').reset();
+
+        // wire copy buttons inside overlay
+        overlay.querySelectorAll('.copy-btn').forEach(b => {
+            b.addEventListener('click', async () => {
+                const value = b.dataset.value || '';
+                try { await navigator.clipboard.writeText(value); b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy', 1500); } catch (e) { alert('Copy failed'); }
+            });
+        });
+
+        const closeBtn = overlay.querySelector('#closeCredBtn');
+        if (closeBtn) closeBtn.addEventListener('click', closeCredentials);
+
+        const form = document.getElementById('signupForm');
+        if (form) form.reset();
     } catch (error) {
         alert(error.message);
     }
 }
 
 function handleLogout() {
-    auth.logout();
-<<<<<<< HEAD
-    showAuth();
-=======
+    try { auth.logout(); } catch (e) {}
     showHome();
->>>>>>> 56a26c6 (Initial commit)
+}
+
+function closeCredentials() {
+    const overlay = document.querySelector('.overlay');
+    if (overlay) { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 240); }
 }
 
 // UI state management
 function showAuth() {
-<<<<<<< HEAD
-    authSection.classList.remove('hidden');
-    teacherDashboard.classList.add('hidden');
-    studentDashboard.classList.add('hidden');
-    quizSection.classList.add('hidden');
-=======
-    // Open the auth container and default to login panel
     openAuthAndShow('login');
->>>>>>> 56a26c6 (Initial commit)
 }
 
 function showDashboard() {
-    authSection.classList.add('hidden');
-    quizSection.classList.add('hidden');
+    if (authSection) authSection.classList.add('hidden');
+    if (quizSection) quizSection.classList.add('hidden');
 
-<<<<<<< HEAD
-    if (auth.isTeacher()) {
-        teacherDashboard.classList.remove('hidden');
-        studentDashboard.classList.add('hidden');
-        renderQuestionList();
-    } else {
-        teacherDashboard.classList.add('hidden');
-=======
     // hide all dashboards first
-    teacherDashboard.classList.add('hidden');
-    studentDashboard.classList.add('hidden');
-    adminDashboard.classList.add('hidden');
+    if (teacherDashboard) teacherDashboard.classList.add('hidden');
+    if (studentDashboard) studentDashboard.classList.add('hidden');
+    if (adminDashboard) adminDashboard.classList.add('hidden');
 
-    if (auth.isAdmin()) {
-        adminDashboard.classList.remove('hidden');
-        renderAdminPanel();
-    } else if (auth.isTeacher()) {
-        teacherDashboard.classList.remove('hidden');
-        renderQuestionList();
-    } else {
->>>>>>> 56a26c6 (Initial commit)
-        studentDashboard.classList.remove('hidden');
+    try {
+        if (auth.isAdmin()) { if (adminDashboard) adminDashboard.classList.remove('hidden'); renderAdminPanel(); }
+        else if (auth.isTeacher()) { if (teacherDashboard) teacherDashboard.classList.remove('hidden'); renderQuestionList(); }
+        else { if (studentDashboard) studentDashboard.classList.remove('hidden'); }
+    } catch (e) {
+        // fallback
+        if (studentDashboard) studentDashboard.classList.remove('hidden');
     }
 }
 
@@ -222,34 +230,26 @@ function showDashboard() {
 function handleAddQuestion(event) {
     event.preventDefault();
     const questionText = document.getElementById('questionText').value;
-    const options = Array.from(document.getElementById('options').getElementsByTagName('input'))
-        .map(input => input.value);
+    const options = Array.from(document.getElementById('options').getElementsByTagName('input')).map(i => i.value);
     const correctAnswer = parseInt(document.getElementById('correctAnswer').value);
 
-    const question = {
-        q: questionText,
-        type: 'radio',
-        options,
-        answer: correctAnswer
-    };
-
+    const question = { q: questionText, type: 'radio', options, answer: correctAnswer };
     questionManager.addQuestion(question);
-    document.getElementById('questionForm').reset();
+    const form = document.getElementById('questionForm'); if (form) form.reset();
     renderQuestionList();
 }
 
 function renderQuestionList() {
     const list = document.getElementById('questionsList');
     const questions = questionManager.getQuestions();
-    
+    if (!list) return;
+
     list.innerHTML = questions.map((q, idx) => `
         <div class="question-item">
             <h3>Question ${idx + 1}</h3>
             <p>${q.q}</p>
             <ul>
-                ${q.options.map((opt, i) => `
-                    <li>${i === q.answer ? '✓ ' : ''}${opt}</li>
-                `).join('')}
+                ${q.options.map((opt, i) => `<li>${i === q.answer ? '✓ ' : ''}${opt}</li>`).join('')}
             </ul>
             <button onclick="deleteQuestion('${q.id}')" class="btn">Delete</button>
         </div>
@@ -257,130 +257,65 @@ function renderQuestionList() {
 }
 
 function deleteQuestion(id) {
-    if (confirm('Are you sure you want to delete this question?')) {
-        questionManager.deleteQuestion(id);
-        renderQuestionList();
-    }
+    if (confirm('Are you sure you want to delete this question?')) { questionManager.deleteQuestion(id); renderQuestionList(); }
 }
 
-// Exam taking functions
+// Exam functions
 function startExam() {
     const questions = questionManager.getQuestions();
-    if (questions.length === 0) {
-        alert('No questions available.');
-        return;
-    }
+    if (questions.length === 0) { alert('No questions available.'); return; }
 
-    currentIndex = 0;
-    userAnswers = {};
-    timeLeft = 30 * 60; // 30 minutes
-    
-    studentDashboard.classList.add('hidden');
-    quizSection.classList.remove('hidden');
-    totalEl.textContent = questions.length;
-    
-    startTimer();
-    renderQuestion();
+    currentIndex = 0; userAnswers = {}; timeLeft = 30 * 60;
+    if (studentDashboard) studentDashboard.classList.add('hidden');
+    if (quizSection) quizSection.classList.remove('hidden');
+    if (totalEl) totalEl.textContent = questions.length;
+    startTimer(); renderQuestion();
 }
 
-function startTimer() {
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            submitQuiz();
-            return;
-        }
-        updateTimerDisplay();
-    }, 1000);
-}
+function startTimer() { updateTimerDisplay(); timerInterval = setInterval(() => { timeLeft--; if (timeLeft <= 0) { clearInterval(timerInterval); submitQuiz(); return; } updateTimerDisplay(); }, 1000); }
 
-function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
+function updateTimerDisplay() { if (!timerEl) return; const minutes = Math.floor(timeLeft / 60); const seconds = timeLeft % 60; timerEl.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`; }
 
 function renderQuestion() {
     const questions = questionManager.getQuestions();
+    if (!questions || questions.length === 0) return;
     const q = questions[currentIndex];
-    currentEl.textContent = currentIndex + 1;
-    
-    questionArea.innerHTML = `
-        <div class="question">
-            <h3>${currentIndex + 1}. ${q.q}</h3>
-            <ul class="options">
-                ${q.options.map((opt, idx) => `
-                    <li class="option">
-                        <input type="${q.type}" 
-                               name="answer" 
-                               value="${idx}"
-                               id="opt${idx}"
-                               ${userAnswers[q.id] === idx ? 'checked' : ''}>
-                        <label for="opt${idx}">${opt}</label>
-                    </li>
-                `).join('')}
-            </ul>
-        </div>
-    `;
+    if (currentEl) currentEl.textContent = currentIndex + 1;
 
-    // Add change event listeners
-    questionArea.querySelectorAll('input').forEach(input => {
-        input.addEventListener('change', () => {
-            userAnswers[q.id] = parseInt(input.value);
+    if (questionArea) {
+        questionArea.innerHTML = `
+            <div class="question">
+                <h3>${currentIndex + 1}. ${q.q}</h3>
+                <ul class="options">
+                    ${q.options.map((opt, idx) => `
+                        <li class="option">
+                            <input type="${q.type}" name="answer" value="${idx}" id="opt${idx}" ${userAnswers[q.id] === idx ? 'checked' : ''}>
+                            <label for="opt${idx}">${opt}</label>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `;
+
+        questionArea.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', () => { userAnswers[q.id] = parseInt(input.value); });
         });
-    });
+    }
 
-    // Update navigation
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex === questions.length - 1;
+    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+    if (nextBtn) nextBtn.disabled = currentIndex === questions.length - 1;
 }
 
-prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) {
-        currentIndex--;
-        renderQuestion();
-    }
-});
-
-nextBtn.addEventListener('click', () => {
-    const questions = questionManager.getQuestions();
-    if (currentIndex < questions.length - 1) {
-        currentIndex++;
-        renderQuestion();
-    }
-});
-
-submitBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to submit your exam?')) {
-        submitQuiz();
-    }
-});
-
 function submitQuiz() {
-    clearInterval(timerInterval);
+    if (timerInterval) clearInterval(timerInterval);
     const questions = questionManager.getQuestions();
-    
     let score = 0;
-    const results = questions.map(q => {
-        const isCorrect = userAnswers[q.id] === q.answer;
-        if (isCorrect) score++;
-        return {
-            question: q.q,
-            userAnswer: q.options[userAnswers[q.id]] || 'Not answered',
-            correctAnswer: q.options[q.answer],
-            isCorrect
-        };
-    });
+    const results = questions.map(q => { const isCorrect = userAnswers[q.id] === q.answer; if (isCorrect) score++; return { question: q.q, userAnswer: q.options[userAnswers[q.id]] || 'Not answered', correctAnswer: q.options[q.answer], isCorrect }; });
 
-    // Display results
-    document.getElementById('quiz').classList.add('hidden');
-    resultSection.classList.remove('hidden');
-    
-    scoreText.textContent = `Score: ${score} out of ${questions.length} (${Math.round((score/questions.length)*100)}%)`;
-    
-    details.innerHTML = results.map((r, idx) => `
+    const quizEl = document.getElementById('quiz'); if (quizEl) quizEl.classList.add('hidden');
+    if (resultSection) resultSection.classList.remove('hidden');
+    if (scoreText) scoreText.textContent = `Score: ${score} out of ${questions.length} (${Math.round((score/questions.length)*100)}%)`;
+    if (details) details.innerHTML = results.map((r, idx) => `
         <div class="details-item ${r.isCorrect ? 'correct' : 'incorrect'}">
             <h4>Question ${idx + 1}</h4>
             <p>${r.question}</p>
@@ -390,67 +325,22 @@ function submitQuiz() {
     `).join('');
 }
 
-function returnToDashboard() {
-    quizSection.classList.add('hidden');
-    resultSection.classList.add('hidden');
-    showDashboard();
-}
+function returnToDashboard() { if (quizSection) quizSection.classList.add('hidden'); if (resultSection) resultSection.classList.add('hidden'); showDashboard(); }
 
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-<<<<<<< HEAD
-        const btn = event.target;
-        btn.textContent = 'Copied!';
-        setTimeout(() => {
-            btn.textContent = 'Copy';
-        }, 2000);
-=======
-        // attempt to find the button that triggered this by searching for a code element with matching text
-        const btn = Array.from(document.querySelectorAll('.copy-btn')).find(b => b.previousElementSibling && b.previousElementSibling.textContent === text) || null;
-        if (btn) {
-            const old = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => btn.textContent = old, 1500);
-        }
->>>>>>> 56a26c6 (Initial commit)
-    });
-}
+function copyToClipboard(text) { navigator.clipboard.writeText(text).catch(() => alert('Copy failed')); }
 
-function closeCredentials() {
-    const overlay = document.querySelector('.overlay');
-    if (overlay) {
-        overlay.classList.add('fade-out');
-        setTimeout(() => {
-            overlay.remove();
-        }, 300);
-    }
-<<<<<<< HEAD
-=======
-}
-
-// Return UI to the public home page and reset auth UI
 function backToHome() {
-    // hide dashboards and quiz
-    teacherDashboard.classList.add('hidden');
-    studentDashboard.classList.add('hidden');
-    adminDashboard.classList.add('hidden');
-    quizSection.classList.add('hidden');
-    // reset auth panels to login
-    openAuthAndShow('login');
-    // then immediately hide auth to show pure home (acts like a back button)
+    if (teacherDashboard) teacherDashboard.classList.add('hidden');
+    if (studentDashboard) studentDashboard.classList.add('hidden');
+    if (adminDashboard) adminDashboard.classList.add('hidden');
+    if (quizSection) quizSection.classList.add('hidden');
     showHome();
 }
 
-// Admin utilities
 function renderAdminPanel() {
     const statsEl = document.getElementById('adminStats');
     const usersEl = document.getElementById('adminUsers');
     const users = JSON.parse(localStorage.getItem('users')) || [];
-    statsEl.textContent = `Users: ${users.length} | Questions: ${questionManager.getQuestions().length}`;
-    usersEl.innerHTML = users.map(u => `
-        <div class="admin-user">
-            <strong>${u.username}</strong> — ${u.role}
-        </div>
-    `).join('');
->>>>>>> 56a26c6 (Initial commit)
+    if (statsEl) statsEl.textContent = `Users: ${users.length} | Questions: ${questionManager.getQuestions().length}`;
+    if (usersEl) usersEl.innerHTML = users.map(u => `<div class="admin-user"><strong>${u.username}</strong> — ${u.role}</div>`).join('');
 }

@@ -4,26 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.updated.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-content">
-            <a href="index.html" class="nav-logo">Online Exam System</a>
-            <div class="nav-links" id="navLinks">
-                <a href="index.html" class="active">Home</a>
-                <a href="#about">About</a>
-                <a href="#features">Features</a>
-                <a href="#contact">Contact</a>
-                <button class="btn nav-btn" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
-                <button class="btn nav-btn" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
-                <button class="btn nav-admin" id="adminBtn" onclick="openAuthAndShow('admin')">Admin Login</button>
+    <!-- Header with Navigation Bar -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">Online Exam System</a>
+
+                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="active">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#features">Features</a>
+                    <a href="#contact">Contact</a>
+                </div>
+
+                <div class="nav-actions" id="navActions">
+                    <button class="btn nav-btn" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
+                    <button class="btn nav-btn" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
+                    <button class="btn nav-admin" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                </div>
+
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
             </div>
-            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <!-- Home Page Content -->
     <div class="home-section" id="homeSection">

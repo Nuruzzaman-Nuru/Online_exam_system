@@ -83,6 +83,26 @@ body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',
 .dashboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1rem}
 .question-list .question-item{background:var(--card);padding:1rem;border-radius:10px;margin-bottom:.6rem;box-shadow:var(--shadow-sm);border:1px solid rgba(15,23,42,0.02)}
 
+/* Admin users list styling */
+#adminUsers{display:flex;flex-direction:column;gap:.6rem}
+.admin-user{display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:.7rem 1rem;border-radius:10px;box-shadow:var(--shadow-sm);border:1px solid rgba(15,23,42,0.03)}
+.admin-user .left{display:flex;align-items:center;gap:.75rem}
+.user-avatar{width:44px;height:44px;border-radius:8px;background:linear-gradient(180deg,rgba(99,102,241,0.12),rgba(79,70,229,0.08));display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:var(--primary-dark)}
+.user-meta{display:flex;flex-direction:column}
+.user-meta .username{font-weight:700;color:var(--text)}
+.user-meta .role{font-size:.9rem;color:var(--muted)}
+.user-actions{display:flex;gap:.5rem;align-items:center}
+.status-badge{padding:.28rem .55rem;border-radius:999px;font-weight:800;font-size:.82rem;color:#fff}
+.status-badge.active{background:linear-gradient(90deg,#16a34a,#059669)}
+.status-badge.inactive{background:linear-gradient(90deg,#94a3b8,#64748b)}
+.admin-edit{background:transparent;border:1px solid var(--border);padding:.45rem .6rem;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:700}
+.admin-edit:hover{background:var(--gradient);color:#fff;border-color:transparent;transform:translateY(-2px)}
+
+@media (max-width:880px){
+  .admin-user{flex-direction:column;align-items:flex-start}
+  .user-actions{width:100%;justify-content:space-between;margin-top:.5rem}
+}
+
 /* Quiz */
 .quiz-wrapper{max-width:920px;margin:1.2rem auto;padding:1rem}
 .question-area{background:var(--card);padding:1rem;border-radius:12px;box-shadow:var(--shadow-md);border:1px solid rgba(15,23,42,0.03)}

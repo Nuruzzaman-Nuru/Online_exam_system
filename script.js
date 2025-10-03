@@ -433,10 +433,77 @@ function backToHome() {
     }
 }
 
+function saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
 function renderAdminPanel() {
     const statsEl = document.getElementById('adminStats');
     const usersEl = document.getElementById('adminUsers');
-    const users = JSON.parse(localStorage.getItem('users')) || [];
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    // Ensure every user has an 'active' flag (default true)
+    let changed = false;
+    users = users.map(u => {
+        if (typeof u.active === 'undefined') { u.active = true; changed = true; }
+        return u;
+    });
+    if (changed) saveUsers(users);
+
     if (statsEl) statsEl.textContent = `Users: ${users.length} | Questions: ${questionManager.getQuestions().length}`;
-    if (usersEl) usersEl.innerHTML = users.map(u => `<div class="admin-user"><strong>${u.username}</strong> — ${u.role}</div>`).join('');
+    if (!usersEl) return;
+
+    usersEl.innerHTML = users.map(u => {
+        const initials = (u.fullName || u.username || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
+        const roleLabel = (u.role || 'student').replace(/^(.)/, s => s.toUpperCase());
+        const statusClass = u.active ? 'active' : 'inactive';
+        const statusText = u.active ? 'Active' : 'Inactive';
+
+        return `
+            <div class="admin-user" data-id="${u.id}">
+                <div class="left">
+                    <div class="user-avatar">${initials}</div>
+                    <div class="user-meta">
+                        <div class="username">${u.username}</div>
+                        <div class="role">${roleLabel}</div>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                    <button class="admin-edit" onclick="openAdminEdit('${u.id}')">Edit</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openAdminEdit(userId) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => u.id === userId);
+    if (!user) { alert('User not found'); return; }
+
+    // Prompt for role change
+    const newRole = prompt('Set role for user (student / teacher / admin):', user.role || 'student');
+    if (newRole === null) return; // cancelled
+    const role = (newRole || 'student').toLowerCase();
+    if (!['student','teacher','admin'].includes(role)) { alert('Invalid role. No changes made.'); return; }
+
+    // Toggle active state
+    const makeActive = confirm(`Current status: ${user.active ? 'Active' : 'Inactive'}\n\nPress OK to set user ACTIVE, Cancel to set INACTIVE.`);
+
+    // Optionally change password
+    const changePwd = confirm('Do you want to change the user password?');
+    if (changePwd) {
+        const newPwd = prompt('Enter new password (leave blank to cancel):');
+        if (newPwd !== null && newPwd.trim() !== '') user.password = newPwd;
+    }
+
+    // Apply changes
+    user.role = role;
+    user.active = !!makeActive;
+
+    // Save and re-render
+    saveUsers(users);
+    renderAdminPanel();
+    alert('User updated successfully');
 }

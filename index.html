@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.updated.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-content">
-            <a href="#" class="nav-logo">Online Exam System</a>
-            <div class="nav-links" id="navLinks">
-                <a href="#" class="active">Home</a>
-                <a href="#about">About</a>
-                <a href="#features">Features</a>
-                <a href="#contact">Contact</a>
-                <button class="btn nav-btn" onclick="showAuth()">Login/Sign Up</button>
+    <!-- Header with Navigation Bar -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">Online Exam System</a>
+
+                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="active">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#features">Features</a>
+                    <a href="#contact">Contact</a>
+                </div>
+
+                <div class="nav-actions" id="navActions">
+                    <button class="btn nav-btn" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
+                    <button class="btn nav-btn" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
+                    <button class="btn nav-admin" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                </div>
+
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
             </div>
-            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <!-- Home Page Content -->
     <div class="home-section" id="homeSection">
@@ -29,7 +38,7 @@
             <h1>Welcome to Online Exam System</h1>
             <p>A modern platform for conducting online examinations with ease</p>
             <div class="hero-buttons">
-                <button class="btn primary" onclick="showAuth()">Get Started</button>
+                <button class="btn primary" onclick="openAuthAndShow('login')">Get Started</button>
                 <button class="btn outline" onclick="location.href='#features'">Learn More</button>
             </div>
         </div>
@@ -61,9 +70,17 @@
     <!-- Auth Section -->
     <div class="auth-container hidden" id="authContainer">
         <section id="authSection" class="auth-section">
-            <h1>Online Exam System</h1>
+            <div class="auth-header">
+                <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                <h1>Online Exam System</h1>
+            </div>
+            <div class="auth-tabs">
+                <button class="tab active" data-target="loginForm">Login</button>
+                <button class="tab" data-target="signupForm">Sign Up</button>
+                <button class="tab" data-target="adminForm">Admin</button>
+            </div>
             <div class="auth-forms">
-                <div class="login-form" id="loginForm">
+                <div class="login-form auth-panel" id="loginForm">
                     <h2>Login</h2>
                     <form onsubmit="return handleLogin(event)">
                         <input type="text" placeholder="Username" id="loginUsername" required>
@@ -72,7 +89,7 @@
                     </form>
                 </div>
 
-                <div class="signup-form" id="signupForm">
+                <div class="signup-form auth-panel" id="signupForm">
                     <h2>Sign Up</h2>
                     <form onsubmit="return handleSignup(event)">
                         <input type="text" placeholder="Full Name" id="signupFullName" required>
@@ -87,14 +104,28 @@
                         <button type="submit" class="btn primary">Sign Up</button>
                     </form>
                 </div>
+
+                <div class="admin-form auth-panel hidden" id="adminForm">
+                    <h2>Admin Login</h2>
+                    <form onsubmit="return handleAdminLogin(event)">
+                        <input type="text" placeholder="Admin Username" id="adminUsername" required>
+                        <input type="password" placeholder="Admin Password" id="adminPassword" required>
+                        <button type="submit" class="btn primary">Admin Login</button>
+                    </form>
+                </div>
             </div>
         </section>
 
         <!-- Teacher Dashboard -->
         <section id="teacherDashboard" class="dashboard hidden">
             <header class="dashboard-header">
-                <h1>Teacher Dashboard</h1>
-                <button onclick="handleLogout()" class="btn">Logout</button>
+                <div class="dashboard-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Teacher Dashboard</h1>
+                </div>
+                <div class="dashboard-header-right">
+                    <button onclick="handleLogout()" class="btn">Logout</button>
+                </div>
             </header>
             
             <div class="question-form">
@@ -124,11 +155,36 @@
             </div>
         </section>
 
+        <!-- Admin Dashboard -->
+        <section id="adminDashboard" class="dashboard hidden">
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <div class="dashboard-header-right">
+                    <button onclick="handleLogout()" class="btn">Logout</button>
+                </div>
+            </header>
+
+            <div class="admin-panel">
+                <h2>Site Overview</h2>
+                <p id="adminStats">Loading stats...</p>
+                <h3>Users</h3>
+                <div id="adminUsers"></div>
+            </div>
+        </section>
+
         <!-- Student Dashboard -->
         <section id="studentDashboard" class="dashboard hidden">
             <header class="dashboard-header">
-                <h1>Student Dashboard</h1>
-                <button onclick="handleLogout()" class="btn">Logout</button>
+                <div class="dashboard-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Student Dashboard</h1>
+                </div>
+                <div class="dashboard-header-right">
+                    <button onclick="handleLogout()" class="btn">Logout</button>
+                </div>
             </header>
 
             <div class="exam-info">
@@ -141,7 +197,10 @@
         <!-- Quiz Section -->
         <section id="quizSection" class="quiz-wrapper hidden">
             <header class="quiz-header">
-                <h1>Online Exam</h1>
+                <div class="quiz-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Online Exam</h1>
+                </div>
                 <div class="meta">
                     <div class="timer">Time left: <span id="timer">--:--</span></div>
                     <div class="progress">Question <span id="current">0</span> / <span id="total">0</span></div>
@@ -168,6 +227,26 @@
             </section>
         </section>
     </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Online Exam System</h3>
+                <p>Manage exams, track progress, and stay secure.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-contact">
+                <p>support@example.com</p>
+                <p>+1 (555) 555-5555</p>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; <span id="year"></span> Online Exam System. All rights reserved.</div>
+    </footer>
 
     <script src="auth.js"></script>
     <script src="questionManager.js"></script>

@@ -52,21 +52,22 @@ body {
     text-decoration: none;
 }
 
-.nav-links {
+.nav-center, .nav-actions {
     display: flex;
-    gap: 2rem;
+    gap: 1.25rem;
     align-items: center;
 }
 
-.nav-links a {
+.nav-center a,
+.nav-actions a {
     color: var(--text);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s;
+    transition: color 0.18s ease;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
+.nav-center a:hover,
+.nav-center a.active {
     color: var(--primary);
 }
 
@@ -74,16 +75,25 @@ body {
     background: var(--gradient);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-weight: 500;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.nav-admin {
+    background: transparent;
+    color: var(--primary-dark);
+    border: 2px solid rgba(79,70,229,0.15);
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 .menu-toggle {
     display: none;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     cursor: pointer;
     color: var(--text);
 }
@@ -105,6 +115,7 @@ body {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     background: var(--gradient);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -117,39 +128,34 @@ body {
 
 .hero-buttons {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
+    .auth-forms {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
 
-/* Feature Cards */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
+    .auth-tabs {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 1rem;
+    }
 
-.feature-card {
-    background: var(--card);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.2s;
-}
+    .auth-tabs .tab {
+        background: transparent;
+        border: 1px solid var(--border);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.feature-card h3 {
-    font-size: 1.25rem;
+    .auth-tabs .tab.active {
+        background: var(--gradient);
+        color: #fff;
+        border-color: transparent;
+    }
     margin-bottom: 0.5rem;
     color: var(--primary-dark);
 }
@@ -172,6 +178,31 @@ body {
     margin-top: 2rem;
 }
 
+<<<<<<< HEAD
+=======
+.auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.auth-tabs .tab {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-tabs .tab.active {
+    background: var(--gradient);
+    color: #fff;
+    border-color: transparent;
+}
+
+>>>>>>> 56a26c6 (Initial commit)
 .login-form,
 .signup-form {
     background: var(--card);
@@ -227,6 +258,36 @@ body {
     color: var(--primary);
 }
 
+<<<<<<< HEAD
+=======
+.btn.small {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.9rem;
+}
+
+.btn.outline.small {
+    border-width: 1px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dashboard-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 .btn:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
@@ -237,6 +298,105 @@ body {
     display: none !important;
 }
 
+<<<<<<< HEAD
+=======
+/* Footer */
+.site-footer {
+    background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
+    border-top: 1px solid var(--border);
+    padding: 2.25rem 1rem;
+    margin-top: 3rem;
+    box-shadow: 0 -1px 4px rgba(20,20,20,0.02);
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-brand h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+}
+
+.footer-inner .footer-brand p {
+    max-width: 320px;
+    color: var(--text-light);
+}
+
+.footer-links a {
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+    margin-bottom: 0.3rem;
+}
+
+.footer-contact p {
+    margin-bottom: 0.3rem;
+    color: var(--text-light);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+    color: var(--primary-dark);
+}
+
+/* overlay for credential popup */
+.overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(2,6,23,0.6);
+    z-index: 2000;
+}
+
+.overlay .credentials-popup {
+    background: var(--card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.credentials-box {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.credential-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.fade-out { opacity: 0; transition: opacity 240ms ease; }
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-links {
@@ -276,4 +436,13 @@ body {
     .auth-forms {
         grid-template-columns: 1fr;
     }
+<<<<<<< HEAD
+=======
+
+    .footer-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+>>>>>>> 56a26c6 (Initial commit)
 }

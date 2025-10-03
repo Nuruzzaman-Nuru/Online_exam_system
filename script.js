@@ -25,15 +25,51 @@ let scoreText = null;
 let details = null;
 
 function toggleMenu() {
-    // toggle visibility for center links and actions on small screens
+    // On mobile, the hamburger should show only the center links and keep actions hidden
     const center = document.getElementById('navCenter');
     const actions = document.getElementById('navActions');
-    if (center) center.classList.toggle('show');
-    if (actions) actions.classList.toggle('show');
+    if (center) {
+        const isShown = center.classList.toggle('show');
+        // if opening center, ensure actions are hidden
+        if (isShown && actions) actions.classList.remove('show');
+    }
 }
+
+// Close mobile menus when clicking outside
+window.addEventListener('click', (e) => {
+    const toggle = document.querySelector('.menu-toggle');
+    const center = document.getElementById('navCenter');
+    const actions = document.getElementById('navActions');
+    if (!toggle || !center) return;
+    // if click is inside the nav or on the toggle, ignore
+    const nav = document.querySelector('.nav-content');
+    if (nav && nav.contains(e.target)) return;
+    // otherwise hide mobile menus
+    center.classList.remove('show');
+    if (actions) actions.classList.remove('show');
+    // also clear solo/active state when clicking outside
+    if (actions) {
+        actions.classList.remove('solo');
+        actions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+    }
+});
 
 // Open the auth container and optionally show a specific panel (login/signup/admin)
 function openAuthAndShow(panel) {
+    // If already logged in, go straight to dashboard instead of showing auth UI
+    try {
+        const currentUser = auth.getCurrentUser();
+        if (currentUser) {
+            // hide home and auth UI, show appropriate dashboard
+            if (authContainer) authContainer.classList.add('hidden');
+            document.getElementById('homeSection').classList.add('hidden');
+            showDashboard();
+            return;
+        }
+    } catch (e) {
+        // ignore and show auth UI
+    }
+
     document.getElementById('homeSection').classList.add('hidden');
     if (authContainer) authContainer.classList.remove('hidden');
 
@@ -97,6 +133,21 @@ window.addEventListener('load', () => {
     if (prevBtn) prevBtn.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); }});
     if (nextBtn) nextBtn.addEventListener('click', () => { const questions = questionManager.getQuestions(); if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }});
     if (submitBtn) submitBtn.addEventListener('click', () => { if (confirm('Are you sure you want to submit your exam?')) submitQuiz(); });
+
+    // nav action buttons: when one is clicked, show it as the only visible action (solo mode)
+    const navActions = document.getElementById('navActions');
+    if (navActions) {
+        navActions.querySelectorAll('.nav-action').forEach(btn => {
+            btn.addEventListener('click', (ev) => {
+                // mark only this button active and set parent to solo
+                navActions.classList.add('solo');
+                navActions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // prevent the global outside-click handler from immediately closing it
+                ev.stopPropagation();
+            });
+        });
+    }
 
     // initial view depending on auth state (auth.js expected)
     try {
@@ -194,7 +245,45 @@ function handleSignup(event) {
 
 function handleLogout() {
     try { auth.logout(); } catch (e) {}
+
+    // Clear any running exam timer
+    if (typeof timerInterval !== 'undefined' && timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    // Reset quiz and UI state
+    timeLeft = 30 * 60;
+    currentIndex = 0;
+    userAnswers = {};
+    if (timerEl) timerEl.textContent = '--:--';
+
+    // Hide any dashboards, quiz or result views
+    if (teacherDashboard) teacherDashboard.classList.add('hidden');
+    if (studentDashboard) studentDashboard.classList.add('hidden');
+    if (adminDashboard) adminDashboard.classList.add('hidden');
+    if (quizSection) quizSection.classList.add('hidden');
+    if (resultSection) resultSection.classList.add('hidden');
+
+    // Remove overlays and reset forms
+    const overlay = document.querySelector('.overlay'); if (overlay) overlay.remove();
+    document.querySelectorAll('form').forEach(f => { try { f.reset(); } catch (e) {} });
+
+    // Reset auth container state
+    if (authContainer) authContainer.classList.add('hidden');
+
+    // Show public home
     showHome();
+
+    // Notify user
+    try { window.alert('You have been logged out.'); } catch (e) {}
+
+    // clear any nav-actions solo/active state
+    const actions = document.getElementById('navActions');
+    if (actions) {
+        actions.classList.remove('solo');
+        actions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+    }
 }
 
 function closeCredentials() {
@@ -335,12 +424,86 @@ function backToHome() {
     if (adminDashboard) adminDashboard.classList.add('hidden');
     if (quizSection) quizSection.classList.add('hidden');
     showHome();
+
+    // clear any nav-actions solo/active state
+    const actions = document.getElementById('navActions');
+    if (actions) {
+        actions.classList.remove('solo');
+        actions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+    }
+}
+
+function saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
 }
 
 function renderAdminPanel() {
     const statsEl = document.getElementById('adminStats');
     const usersEl = document.getElementById('adminUsers');
-    const users = JSON.parse(localStorage.getItem('users')) || [];
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    // Ensure every user has an 'active' flag (default true)
+    let changed = false;
+    users = users.map(u => {
+        if (typeof u.active === 'undefined') { u.active = true; changed = true; }
+        return u;
+    });
+    if (changed) saveUsers(users);
+
     if (statsEl) statsEl.textContent = `Users: ${users.length} | Questions: ${questionManager.getQuestions().length}`;
-    if (usersEl) usersEl.innerHTML = users.map(u => `<div class="admin-user"><strong>${u.username}</strong> — ${u.role}</div>`).join('');
+    if (!usersEl) return;
+
+    usersEl.innerHTML = users.map(u => {
+        const initials = (u.fullName || u.username || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
+        const roleLabel = (u.role || 'student').replace(/^(.)/, s => s.toUpperCase());
+        const statusClass = u.active ? 'active' : 'inactive';
+        const statusText = u.active ? 'Active' : 'Inactive';
+
+        return `
+            <div class="admin-user" data-id="${u.id}">
+                <div class="left">
+                    <div class="user-avatar">${initials}</div>
+                    <div class="user-meta">
+                        <div class="username">${u.username}</div>
+                        <div class="role">${roleLabel}</div>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                    <button class="admin-edit" onclick="openAdminEdit('${u.id}')">Edit</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openAdminEdit(userId) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => u.id === userId);
+    if (!user) { alert('User not found'); return; }
+
+    // Prompt for role change
+    const newRole = prompt('Set role for user (student / teacher / admin):', user.role || 'student');
+    if (newRole === null) return; // cancelled
+    const role = (newRole || 'student').toLowerCase();
+    if (!['student','teacher','admin'].includes(role)) { alert('Invalid role. No changes made.'); return; }
+
+    // Toggle active state
+    const makeActive = confirm(`Current status: ${user.active ? 'Active' : 'Inactive'}\n\nPress OK to set user ACTIVE, Cancel to set INACTIVE.`);
+
+    // Optionally change password
+    const changePwd = confirm('Do you want to change the user password?');
+    if (changePwd) {
+        const newPwd = prompt('Enter new password (leave blank to cancel):');
+        if (newPwd !== null && newPwd.trim() !== '') user.password = newPwd;
+    }
+
+    // Apply changes
+    user.role = role;
+    user.active = !!makeActive;
+
+    // Save and re-render
+    saveUsers(users);
+    renderAdminPanel();
+    alert('User updated successfully');
 }

@@ -8,11 +8,8 @@ let timerInterval = null;
 
 // UI Elements
 const authSection = document.getElementById('authSection');
-<<<<<<< HEAD
-=======
 const authContainer = document.getElementById('authContainer');
 const adminDashboard = document.getElementById('adminDashboard');
->>>>>>> 56a26c6 (Initial commit)
 const teacherDashboard = document.getElementById('teacherDashboard');
 const studentDashboard = document.getElementById('studentDashboard');
 const quizSection = document.getElementById('quizSection');

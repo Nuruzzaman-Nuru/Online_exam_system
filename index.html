@@ -11,15 +11,8 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-content">
-            <a href="#" class="nav-logo">Online Exam System</a>
+            <a href="index.html" class="nav-logo">Online Exam System</a>
             <div class="nav-links" id="navLinks">
-<<<<<<< HEAD
-                <a href="#" class="active">Home</a>
-                <a href="#about">About</a>
-                <a href="#features">Features</a>
-                <a href="#contact">Contact</a>
-                <button class="btn nav-btn" onclick="showAuth()">Login/Sign Up</button>
-=======
                 <a href="index.html" class="active">Home</a>
                 <a href="#about">About</a>
                 <a href="#features">Features</a>
@@ -27,7 +20,6 @@
                 <button class="btn nav-btn" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
                 <button class="btn nav-btn" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
                 <button class="btn nav-admin" id="adminBtn" onclick="openAuthAndShow('admin')">Admin Login</button>
->>>>>>> 56a26c6 (Initial commit)
             </div>
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         </div>
@@ -39,11 +31,7 @@
             <h1>Welcome to Online Exam System</h1>
             <p>A modern platform for conducting online examinations with ease</p>
             <div class="hero-buttons">
-<<<<<<< HEAD
-                <button class="btn primary" onclick="showAuth()">Get Started</button>
-=======
                 <button class="btn primary" onclick="openAuthAndShow('login')">Get Started</button>
->>>>>>> 56a26c6 (Initial commit)
                 <button class="btn outline" onclick="location.href='#features'">Learn More</button>
             </div>
         </div>
@@ -75,11 +63,6 @@
     <!-- Auth Section -->
     <div class="auth-container hidden" id="authContainer">
         <section id="authSection" class="auth-section">
-<<<<<<< HEAD
-            <h1>Online Exam System</h1>
-            <div class="auth-forms">
-                <div class="login-form" id="loginForm">
-=======
             <div class="auth-header">
                 <button onclick="backToHome()" class="btn outline small">Back to Home</button>
                 <h1>Online Exam System</h1>
@@ -91,7 +74,6 @@
             </div>
             <div class="auth-forms">
                 <div class="login-form auth-panel" id="loginForm">
->>>>>>> 56a26c6 (Initial commit)
                     <h2>Login</h2>
                     <form onsubmit="return handleLogin(event)">
                         <input type="text" placeholder="Username" id="loginUsername" required>
@@ -100,11 +82,7 @@
                     </form>
                 </div>
 
-<<<<<<< HEAD
-                <div class="signup-form" id="signupForm">
-=======
                 <div class="signup-form auth-panel" id="signupForm">
->>>>>>> 56a26c6 (Initial commit)
                     <h2>Sign Up</h2>
                     <form onsubmit="return handleSignup(event)">
                         <input type="text" placeholder="Full Name" id="signupFullName" required>
@@ -119,8 +97,6 @@
                         <button type="submit" class="btn primary">Sign Up</button>
                     </form>
                 </div>
-<<<<<<< HEAD
-=======
 
                 <div class="admin-form auth-panel hidden" id="adminForm">
                     <h2>Admin Login</h2>
@@ -130,17 +106,12 @@
                         <button type="submit" class="btn primary">Admin Login</button>
                     </form>
                 </div>
->>>>>>> 56a26c6 (Initial commit)
             </div>
         </section>
 
         <!-- Teacher Dashboard -->
         <section id="teacherDashboard" class="dashboard hidden">
             <header class="dashboard-header">
-<<<<<<< HEAD
-                <h1>Teacher Dashboard</h1>
-                <button onclick="handleLogout()" class="btn">Logout</button>
-=======
                 <div class="dashboard-header-left">
                     <button onclick="backToHome()" class="btn outline small">Back to Home</button>
                     <h1>Teacher Dashboard</h1>
@@ -148,7 +119,6 @@
                 <div class="dashboard-header-right">
                     <button onclick="handleLogout()" class="btn">Logout</button>
                 </div>
->>>>>>> 56a26c6 (Initial commit)
             </header>
             
             <div class="question-form">
@@ -178,13 +148,6 @@
             </div>
         </section>
 
-<<<<<<< HEAD
-        <!-- Student Dashboard -->
-        <section id="studentDashboard" class="dashboard hidden">
-            <header class="dashboard-header">
-                <h1>Student Dashboard</h1>
-                <button onclick="handleLogout()" class="btn">Logout</button>
-=======
         <!-- Admin Dashboard -->
         <section id="adminDashboard" class="dashboard hidden">
             <header class="dashboard-header">
@@ -215,7 +178,6 @@
                 <div class="dashboard-header-right">
                     <button onclick="handleLogout()" class="btn">Logout</button>
                 </div>
->>>>>>> 56a26c6 (Initial commit)
             </header>
 
             <div class="exam-info">
@@ -228,14 +190,10 @@
         <!-- Quiz Section -->
         <section id="quizSection" class="quiz-wrapper hidden">
             <header class="quiz-header">
-<<<<<<< HEAD
-                <h1>Online Exam</h1>
-=======
                 <div class="quiz-header-left">
                     <button onclick="backToHome()" class="btn outline small">Back to Home</button>
                     <h1>Online Exam</h1>
                 </div>
->>>>>>> 56a26c6 (Initial commit)
                 <div class="meta">
                     <div class="timer">Time left: <span id="timer">--:--</span></div>
                     <div class="progress">Question <span id="current">0</span> / <span id="total">0</span></div>
@@ -263,8 +221,6 @@
         </section>
     </div>
 
-<<<<<<< HEAD
-=======
     <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-inner">
@@ -285,7 +241,6 @@
         <div class="footer-bottom">&copy; <span id="year"></span> Online Exam System. All rights reserved.</div>
     </footer>
 
->>>>>>> 56a26c6 (Initial commit)
     <script src="auth.js"></script>
     <script src="questionManager.js"></script>
     <script src="script.js"></script>

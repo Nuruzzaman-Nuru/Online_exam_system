@@ -1,11 +1,17 @@
 /* Enhanced styling for the complete exam system */
 :root {
-    --bg: #f4f7fb;
+    --bg: #f0f4f8;
     --card: #ffffff;
-    --accent: #3b82f6;
+    --accent: #4f46e5;
+    --accent-light: #818cf8;
     --muted: #6b7280;
     --error: #ef4444;
     --success: #22c55e;
+    --border: #e5e7eb;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --gradient: linear-gradient(135deg, var(--accent), var(--accent-light));
 }
 
 * { box-sizing: border-box; }
@@ -43,16 +49,139 @@ html, body {
 .auth-forms select,
 .auth-forms textarea {
     width: 100%;
-    padding: 8px 12px;
-    margin-bottom: 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
     font-family: inherit;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.auth-forms input:focus,
+.auth-forms select:focus,
+.auth-forms textarea:focus {
+    outline: none;
+    border-color: var(--accent-light);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .auth-forms textarea {
     min-height: 80px;
     resize: vertical;
+}
+
+/* Credentials Popup Styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.credentials-popup {
+    background: var(--card);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: slideUp 0.3s ease;
+}
+
+.credentials-popup h3 {
+    color: var(--success);
+    margin: 0 0 20px;
+    font-size: 1.5rem;
+}
+
+.credentials-box {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.credential-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.credential-item span {
+    color: var(--muted);
+    font-size: 14px;
+    min-width: 80px;
+}
+
+.credential-item code {
+    flex: 1;
+    padding: 4px 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--accent);
+}
+
+.copy-btn {
+    padding: 4px 12px;
+    font-size: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: var(--bg);
+    border-color: var(--accent-light);
+}
+
+.save-note {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 16px 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 /* Dashboard */
@@ -180,17 +309,34 @@ html, body {
 /* Common */
 .btn {
     background: #fff;
-    border: 1px solid #e6e9ee;
-    padding: 8px 14px;
+    border: 2px solid var(--border);
+    padding: 12px 24px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    border-color: var(--accent-light);
+    background: #f8fafc;
 }
 
 .btn.primary {
-    background: var(--accent);
+    background: var(--gradient);
     color: #fff;
-    border-color: transparent;
+    border: none;
+    box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+}
+
+.btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+}
+
+.btn.primary:active {
+    transform: translateY(0);
 }
 
 .btn:disabled {

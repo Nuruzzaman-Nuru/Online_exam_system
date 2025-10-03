@@ -294,3 +294,23 @@ function returnToDashboard() {
     resultSection.classList.add('hidden');
     showDashboard();
 }
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+        }, 2000);
+    });
+}
+
+function closeCredentials() {
+    const overlay = document.querySelector('.overlay');
+    if (overlay) {
+        overlay.classList.add('fade-out');
+        setTimeout(() => {
+            overlay.remove();
+        }, 300);
+    }
+}

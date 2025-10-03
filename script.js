@@ -1,0 +1,267 @@
+// Enhanced Online Exam System
+
+// Quiz state
+let currentIndex = 0;
+let userAnswers = {};
+let timeLeft = 30 * 60; // 30 minutes
+let timerInterval = null;
+
+// UI Elements
+const authSection = document.getElementById('authSection');
+const teacherDashboard = document.getElementById('teacherDashboard');
+const studentDashboard = document.getElementById('studentDashboard');
+const quizSection = document.getElementById('quizSection');
+const questionArea = document.getElementById('question-area');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+const timerEl = document.getElementById('timer');
+const currentEl = document.getElementById('current');
+const totalEl = document.getElementById('total');
+const resultSection = document.getElementById('result');
+const scoreText = document.getElementById('scoreText');
+const details = document.getElementById('details');
+
+// Check authentication status on load
+window.addEventListener('load', () => {
+    const currentUser = auth.getCurrentUser();
+    if (currentUser) {
+        showDashboard();
+    } else {
+        showAuth();
+    }
+});
+
+// Authentication handlers
+function handleLogin(event) {
+    event.preventDefault();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        auth.login(username, password);
+        showDashboard();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function handleSignup(event) {
+    event.preventDefault();
+    const username = document.getElementById('signupUsername').value;
+    const password = document.getElementById('signupPassword').value;
+    const role = document.getElementById('role').value;
+
+    try {
+        auth.signup(username, password, role);
+        alert('Account created! Please login.');
+        document.getElementById('signupForm').reset();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function handleLogout() {
+    auth.logout();
+    showAuth();
+}
+
+// UI state management
+function showAuth() {
+    authSection.classList.remove('hidden');
+    teacherDashboard.classList.add('hidden');
+    studentDashboard.classList.add('hidden');
+    quizSection.classList.add('hidden');
+}
+
+function showDashboard() {
+    authSection.classList.add('hidden');
+    quizSection.classList.add('hidden');
+
+    if (auth.isTeacher()) {
+        teacherDashboard.classList.remove('hidden');
+        studentDashboard.classList.add('hidden');
+        renderQuestionList();
+    } else {
+        teacherDashboard.classList.add('hidden');
+        studentDashboard.classList.remove('hidden');
+    }
+}
+
+// Question management
+function handleAddQuestion(event) {
+    event.preventDefault();
+    const questionText = document.getElementById('questionText').value;
+    const options = Array.from(document.getElementById('options').getElementsByTagName('input'))
+        .map(input => input.value);
+    const correctAnswer = parseInt(document.getElementById('correctAnswer').value);
+
+    const question = {
+        q: questionText,
+        type: 'radio',
+        options,
+        answer: correctAnswer
+    };
+
+    questionManager.addQuestion(question);
+    document.getElementById('questionForm').reset();
+    renderQuestionList();
+}
+
+function renderQuestionList() {
+    const list = document.getElementById('questionsList');
+    const questions = questionManager.getQuestions();
+    
+    list.innerHTML = questions.map((q, idx) => `
+        <div class="question-item">
+            <h3>Question ${idx + 1}</h3>
+            <p>${q.q}</p>
+            <ul>
+                ${q.options.map((opt, i) => `
+                    <li>${i === q.answer ? '✓ ' : ''}${opt}</li>
+                `).join('')}
+            </ul>
+            <button onclick="deleteQuestion('${q.id}')" class="btn">Delete</button>
+        </div>
+    `).join('');
+}
+
+function deleteQuestion(id) {
+    if (confirm('Are you sure you want to delete this question?')) {
+        questionManager.deleteQuestion(id);
+        renderQuestionList();
+    }
+}
+
+// Exam taking functions
+function startExam() {
+    const questions = questionManager.getQuestions();
+    if (questions.length === 0) {
+        alert('No questions available.');
+        return;
+    }
+
+    currentIndex = 0;
+    userAnswers = {};
+    timeLeft = 30 * 60; // 30 minutes
+    
+    studentDashboard.classList.add('hidden');
+    quizSection.classList.remove('hidden');
+    totalEl.textContent = questions.length;
+    
+    startTimer();
+    renderQuestion();
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz();
+            return;
+        }
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function renderQuestion() {
+    const questions = questionManager.getQuestions();
+    const q = questions[currentIndex];
+    currentEl.textContent = currentIndex + 1;
+    
+    questionArea.innerHTML = `
+        <div class="question">
+            <h3>${currentIndex + 1}. ${q.q}</h3>
+            <ul class="options">
+                ${q.options.map((opt, idx) => `
+                    <li class="option">
+                        <input type="${q.type}" 
+                               name="answer" 
+                               value="${idx}"
+                               id="opt${idx}"
+                               ${userAnswers[q.id] === idx ? 'checked' : ''}>
+                        <label for="opt${idx}">${opt}</label>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+    `;
+
+    // Add change event listeners
+    questionArea.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', () => {
+            userAnswers[q.id] = parseInt(input.value);
+        });
+    });
+
+    // Update navigation
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === questions.length - 1;
+}
+
+prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    const questions = questionManager.getQuestions();
+    if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+    }
+});
+
+submitBtn.addEventListener('click', () => {
+    if (confirm('Are you sure you want to submit your exam?')) {
+        submitQuiz();
+    }
+});
+
+function submitQuiz() {
+    clearInterval(timerInterval);
+    const questions = questionManager.getQuestions();
+    
+    let score = 0;
+    const results = questions.map(q => {
+        const isCorrect = userAnswers[q.id] === q.answer;
+        if (isCorrect) score++;
+        return {
+            question: q.q,
+            userAnswer: q.options[userAnswers[q.id]] || 'Not answered',
+            correctAnswer: q.options[q.answer],
+            isCorrect
+        };
+    });
+
+    // Display results
+    document.getElementById('quiz').classList.add('hidden');
+    resultSection.classList.remove('hidden');
+    
+    scoreText.textContent = `Score: ${score} out of ${questions.length} (${Math.round((score/questions.length)*100)}%)`;
+    
+    details.innerHTML = results.map((r, idx) => `
+        <div class="details-item ${r.isCorrect ? 'correct' : 'incorrect'}">
+            <h4>Question ${idx + 1}</h4>
+            <p>${r.question}</p>
+            <p>Your answer: ${r.userAnswer}</p>
+            <p>Correct answer: ${r.correctAnswer}</p>
+        </div>
+    `).join('');
+}
+
+function returnToDashboard() {
+    quizSection.classList.add('hidden');
+    resultSection.classList.add('hidden');
+    showDashboard();
+}

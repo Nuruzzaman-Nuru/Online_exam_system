@@ -25,12 +25,34 @@ let scoreText = null;
 let details = null;
 
 function toggleMenu() {
-    // toggle visibility for center links and actions on small screens
+    // On mobile, the hamburger should show only the center links and keep actions hidden
     const center = document.getElementById('navCenter');
     const actions = document.getElementById('navActions');
-    if (center) center.classList.toggle('show');
-    if (actions) actions.classList.toggle('show');
+    if (center) {
+        const isShown = center.classList.toggle('show');
+        // if opening center, ensure actions are hidden
+        if (isShown && actions) actions.classList.remove('show');
+    }
 }
+
+// Close mobile menus when clicking outside
+window.addEventListener('click', (e) => {
+    const toggle = document.querySelector('.menu-toggle');
+    const center = document.getElementById('navCenter');
+    const actions = document.getElementById('navActions');
+    if (!toggle || !center) return;
+    // if click is inside the nav or on the toggle, ignore
+    const nav = document.querySelector('.nav-content');
+    if (nav && nav.contains(e.target)) return;
+    // otherwise hide mobile menus
+    center.classList.remove('show');
+    if (actions) actions.classList.remove('show');
+    // also clear solo/active state when clicking outside
+    if (actions) {
+        actions.classList.remove('solo');
+        actions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+    }
+});
 
 // Open the auth container and optionally show a specific panel (login/signup/admin)
 function openAuthAndShow(panel) {
@@ -111,6 +133,21 @@ window.addEventListener('load', () => {
     if (prevBtn) prevBtn.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); }});
     if (nextBtn) nextBtn.addEventListener('click', () => { const questions = questionManager.getQuestions(); if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }});
     if (submitBtn) submitBtn.addEventListener('click', () => { if (confirm('Are you sure you want to submit your exam?')) submitQuiz(); });
+
+    // nav action buttons: when one is clicked, show it as the only visible action (solo mode)
+    const navActions = document.getElementById('navActions');
+    if (navActions) {
+        navActions.querySelectorAll('.nav-action').forEach(btn => {
+            btn.addEventListener('click', (ev) => {
+                // mark only this button active and set parent to solo
+                navActions.classList.add('solo');
+                navActions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // prevent the global outside-click handler from immediately closing it
+                ev.stopPropagation();
+            });
+        });
+    }
 
     // initial view depending on auth state (auth.js expected)
     try {
@@ -240,6 +277,13 @@ function handleLogout() {
 
     // Notify user
     try { window.alert('You have been logged out.'); } catch (e) {}
+
+    // clear any nav-actions solo/active state
+    const actions = document.getElementById('navActions');
+    if (actions) {
+        actions.classList.remove('solo');
+        actions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+    }
 }
 
 function closeCredentials() {
@@ -380,6 +424,13 @@ function backToHome() {
     if (adminDashboard) adminDashboard.classList.add('hidden');
     if (quizSection) quizSection.classList.add('hidden');
     showHome();
+
+    // clear any nav-actions solo/active state
+    const actions = document.getElementById('navActions');
+    if (actions) {
+        actions.classList.remove('solo');
+        actions.querySelectorAll('.nav-action').forEach(b => b.classList.remove('active'));
+    }
 }
 
 function renderAdminPanel() {

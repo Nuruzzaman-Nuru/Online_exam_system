@@ -5,16 +5,19 @@ class Auth {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
     }
 
-    signup(username, password, role) {
-        if (this.users.some(user => user.username === username)) {
+    signup(userData) {
+        if (this.users.some(user => user.username === userData.username)) {
             throw new Error('Username already exists');
         }
 
         const user = {
             id: Date.now().toString(),
-            username,
-            password, // In a real app, this should be hashed
-            role
+            username: userData.username,
+            password: userData.password, // In a real app, this should be hashed
+            role: userData.role,
+            fullName: userData.fullName,
+            address: userData.address,
+            mobile: userData.mobile
         };
 
         this.users.push(user);

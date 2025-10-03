@@ -40,12 +40,19 @@ html, body {
 }
 
 .auth-forms input,
-.auth-forms select {
+.auth-forms select,
+.auth-forms textarea {
     width: 100%;
     padding: 8px 12px;
     margin-bottom: 12px;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
+    font-family: inherit;
+}
+
+.auth-forms textarea {
+    min-height: 80px;
+    resize: vertical;
 }
 
 /* Dashboard */

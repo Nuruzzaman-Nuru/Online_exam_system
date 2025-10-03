@@ -48,13 +48,42 @@ function handleLogin(event) {
 
 function handleSignup(event) {
     event.preventDefault();
-    const username = document.getElementById('signupUsername').value;
-    const password = document.getElementById('signupPassword').value;
-    const role = document.getElementById('role').value;
+    const userData = {
+        fullName: document.getElementById('signupFullName').value,
+        username: document.getElementById('signupUsername').value,
+        password: document.getElementById('signupPassword').value,
+        mobile: document.getElementById('signupMobile').value,
+        address: document.getElementById('signupAddress').value,
+        role: document.getElementById('role').value
+    };
 
     try {
-        auth.signup(username, password, role);
-        alert('Account created! Please login.');
+        auth.signup(userData);
+        const credentialsHtml = `
+            <div class="credentials-popup">
+                <h3>✅ Account Created Successfully!</h3>
+                <div class="credentials-box">
+                    <p><strong>Your Login Credentials:</strong></p>
+                    <div class="credential-item">
+                        <span>Username:</span>
+                        <code>${userData.username}</code>
+                        <button onclick="copyToClipboard('${userData.username}')" class="copy-btn">Copy</button>
+                    </div>
+                    <div class="credential-item">
+                        <span>Password:</span>
+                        <code>${userData.password}</code>
+                        <button onclick="copyToClipboard('${userData.password}')" class="copy-btn">Copy</button>
+                    </div>
+                </div>
+                <p class="save-note">Please save these credentials securely!</p>
+                <button onclick="closeCredentials()" class="btn primary">Got it!</button>
+            </div>
+        `;
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.innerHTML = credentialsHtml;
+        document.body.appendChild(overlay);
         document.getElementById('signupForm').reset();
     } catch (error) {
         alert(error.message);

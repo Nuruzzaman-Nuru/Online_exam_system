@@ -33,9 +33,9 @@ body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',
 #navCenter a{color:var(--muted);text-decoration:none;font-weight:600;padding:.4rem .6rem;border-radius:8px;transition:all .18s}
 #navCenter a:hover,#navCenter a.active{color:var(--primary-dark);background:linear-gradient(90deg, rgba(99,102,241,0.06), rgba(79,70,229,0.04));}
 
-.nav-btn{background:var(--gradient);color:#fff;border:none;padding:.5rem .95rem;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(79,70,229,0.12);transition:transform .12s ease,box-shadow .12s}
-.nav-btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(79,70,229,0.12)}
-.nav-admin{background:transparent;border:1px solid rgba(79,70,229,0.12);padding:.45rem .8rem;border-radius:10px;color:var(--primary-dark);font-weight:700}
+.nav-action{background:var(--gradient);color:#fff;border:none;padding:.5rem .95rem;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(79,70,229,0.12);transition:transform .12s ease,box-shadow .12s}
+.nav-action:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(79,70,229,0.12)}
+.nav-admin{background:var(--gradient);border:none;padding:.5rem .95rem;border-radius:10px;color:#fff;font-weight:700}
 .menu-toggle{display:none;background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--muted)}
 
 /* Hero */

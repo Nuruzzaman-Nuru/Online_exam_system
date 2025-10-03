@@ -34,6 +34,20 @@ function toggleMenu() {
 
 // Open the auth container and optionally show a specific panel (login/signup/admin)
 function openAuthAndShow(panel) {
+    // If already logged in, go straight to dashboard instead of showing auth UI
+    try {
+        const currentUser = auth.getCurrentUser();
+        if (currentUser) {
+            // hide home and auth UI, show appropriate dashboard
+            if (authContainer) authContainer.classList.add('hidden');
+            document.getElementById('homeSection').classList.add('hidden');
+            showDashboard();
+            return;
+        }
+    } catch (e) {
+        // ignore and show auth UI
+    }
+
     document.getElementById('homeSection').classList.add('hidden');
     if (authContainer) authContainer.classList.remove('hidden');
 
@@ -194,7 +208,38 @@ function handleSignup(event) {
 
 function handleLogout() {
     try { auth.logout(); } catch (e) {}
+
+    // Clear any running exam timer
+    if (typeof timerInterval !== 'undefined' && timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    // Reset quiz and UI state
+    timeLeft = 30 * 60;
+    currentIndex = 0;
+    userAnswers = {};
+    if (timerEl) timerEl.textContent = '--:--';
+
+    // Hide any dashboards, quiz or result views
+    if (teacherDashboard) teacherDashboard.classList.add('hidden');
+    if (studentDashboard) studentDashboard.classList.add('hidden');
+    if (adminDashboard) adminDashboard.classList.add('hidden');
+    if (quizSection) quizSection.classList.add('hidden');
+    if (resultSection) resultSection.classList.add('hidden');
+
+    // Remove overlays and reset forms
+    const overlay = document.querySelector('.overlay'); if (overlay) overlay.remove();
+    document.querySelectorAll('form').forEach(f => { try { f.reset(); } catch (e) {} });
+
+    // Reset auth container state
+    if (authContainer) authContainer.classList.add('hidden');
+
+    // Show public home
     showHome();
+
+    // Notify user
+    try { window.alert('You have been logged out.'); } catch (e) {}
 }
 
 function closeCredentials() {

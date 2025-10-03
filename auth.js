@@ -3,6 +3,23 @@ class Auth {
     constructor() {
         this.users = JSON.parse(localStorage.getItem('users')) || [];
         this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+<<<<<<< HEAD
+=======
+        // Ensure an admin account exists for admin login/testing
+        if (!this.users.some(u => u.role === 'admin')) {
+            const admin = {
+                id: 'admin-' + Date.now(),
+                username: 'admin',
+                password: 'admin123', // change after first use
+                role: 'admin',
+                fullName: 'Administrator',
+                address: '',
+                mobile: ''
+            };
+            this.users.push(admin);
+            localStorage.setItem('users', JSON.stringify(this.users));
+        }
+>>>>>>> 56a26c6 (Initial commit)
     }
 
     signup(userData) {
@@ -48,6 +65,13 @@ class Auth {
         return this.currentUser?.role === 'student';
     }
 
+<<<<<<< HEAD
+=======
+    isAdmin() {
+        return this.currentUser?.role === 'admin';
+    }
+
+>>>>>>> 56a26c6 (Initial commit)
     getCurrentUser() {
         return this.currentUser;
     }

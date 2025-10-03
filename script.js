@@ -8,6 +8,11 @@ let timerInterval = null;
 
 // UI Elements
 const authSection = document.getElementById('authSection');
+<<<<<<< HEAD
+=======
+const authContainer = document.getElementById('authContainer');
+const adminDashboard = document.getElementById('adminDashboard');
+>>>>>>> 56a26c6 (Initial commit)
 const teacherDashboard = document.getElementById('teacherDashboard');
 const studentDashboard = document.getElementById('studentDashboard');
 const quizSection = document.getElementById('quizSection');
@@ -28,14 +33,40 @@ function toggleMenu() {
     navLinks.classList.toggle('show');
 }
 
+<<<<<<< HEAD
 function showAuth() {
     document.getElementById('homeSection').classList.add('hidden');
     document.getElementById('authContainer').classList.remove('hidden');
+=======
+
+// Open the auth container and optionally show a specific panel (login/signup/admin)
+function openAuthAndShow(panel) {
+    document.getElementById('homeSection').classList.add('hidden');
+    authContainer.classList.remove('hidden');
+    // normalize short names to actual panel ids
+    let target = panel;
+    if (panel === 'login') target = 'loginForm';
+    if (panel === 'signup') target = 'signupForm';
+    if (panel === 'admin') target = 'adminForm';
+    // switch tabs
+    document.querySelectorAll('.auth-tabs .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-panel').forEach(p => p.classList.add('hidden'));
+    if (target) {
+        const tab = document.querySelector(`.auth-tabs .tab[data-target="${target}"]`);
+        if (tab) tab.classList.add('active');
+        const panelEl = document.getElementById(target);
+        if (panelEl) panelEl.classList.remove('hidden');
+    }
+>>>>>>> 56a26c6 (Initial commit)
 }
 
 function showHome() {
     document.getElementById('homeSection').classList.remove('hidden');
+<<<<<<< HEAD
     document.getElementById('authContainer').classList.add('hidden');
+=======
+    authContainer.classList.add('hidden');
+>>>>>>> 56a26c6 (Initial commit)
 }
 
 // Check authentication status on load
@@ -46,6 +77,23 @@ window.addEventListener('load', () => {
     } else {
         showHome();
     }
+<<<<<<< HEAD
+=======
+    // footer year
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+    // wire auth tab clicks
+    document.querySelectorAll('.auth-tabs .tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.auth-tabs .tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.add('hidden'));
+            const target = tab.getAttribute('data-target');
+            const panelEl = document.getElementById(target);
+            if (panelEl) panelEl.classList.remove('hidden');
+        });
+    });
+>>>>>>> 56a26c6 (Initial commit)
 });
 
 // Authentication handlers
@@ -62,6 +110,22 @@ function handleLogin(event) {
     }
 }
 
+<<<<<<< HEAD
+=======
+function handleAdminLogin(event) {
+    event.preventDefault();
+    const username = document.getElementById('adminUsername').value;
+    const password = document.getElementById('adminPassword').value;
+
+    try {
+        auth.login(username, password);
+        showDashboard();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+>>>>>>> 56a26c6 (Initial commit)
 function handleSignup(event) {
     event.preventDefault();
     const userData = {
@@ -108,27 +172,51 @@ function handleSignup(event) {
 
 function handleLogout() {
     auth.logout();
+<<<<<<< HEAD
     showAuth();
+=======
+    showHome();
+>>>>>>> 56a26c6 (Initial commit)
 }
 
 // UI state management
 function showAuth() {
+<<<<<<< HEAD
     authSection.classList.remove('hidden');
     teacherDashboard.classList.add('hidden');
     studentDashboard.classList.add('hidden');
     quizSection.classList.add('hidden');
+=======
+    // Open the auth container and default to login panel
+    openAuthAndShow('login');
+>>>>>>> 56a26c6 (Initial commit)
 }
 
 function showDashboard() {
     authSection.classList.add('hidden');
     quizSection.classList.add('hidden');
 
+<<<<<<< HEAD
     if (auth.isTeacher()) {
         teacherDashboard.classList.remove('hidden');
         studentDashboard.classList.add('hidden');
         renderQuestionList();
     } else {
         teacherDashboard.classList.add('hidden');
+=======
+    // hide all dashboards first
+    teacherDashboard.classList.add('hidden');
+    studentDashboard.classList.add('hidden');
+    adminDashboard.classList.add('hidden');
+
+    if (auth.isAdmin()) {
+        adminDashboard.classList.remove('hidden');
+        renderAdminPanel();
+    } else if (auth.isTeacher()) {
+        teacherDashboard.classList.remove('hidden');
+        renderQuestionList();
+    } else {
+>>>>>>> 56a26c6 (Initial commit)
         studentDashboard.classList.remove('hidden');
     }
 }
@@ -313,11 +401,21 @@ function returnToDashboard() {
 
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
+<<<<<<< HEAD
         const btn = event.target;
         btn.textContent = 'Copied!';
         setTimeout(() => {
             btn.textContent = 'Copy';
         }, 2000);
+=======
+        // attempt to find the button that triggered this by searching for a code element with matching text
+        const btn = Array.from(document.querySelectorAll('.copy-btn')).find(b => b.previousElementSibling && b.previousElementSibling.textContent === text) || null;
+        if (btn) {
+            const old = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = old, 1500);
+        }
+>>>>>>> 56a26c6 (Initial commit)
     });
 }
 
@@ -329,4 +427,33 @@ function closeCredentials() {
             overlay.remove();
         }, 300);
     }
+<<<<<<< HEAD
+=======
+}
+
+// Return UI to the public home page and reset auth UI
+function backToHome() {
+    // hide dashboards and quiz
+    teacherDashboard.classList.add('hidden');
+    studentDashboard.classList.add('hidden');
+    adminDashboard.classList.add('hidden');
+    quizSection.classList.add('hidden');
+    // reset auth panels to login
+    openAuthAndShow('login');
+    // then immediately hide auth to show pure home (acts like a back button)
+    showHome();
+}
+
+// Admin utilities
+function renderAdminPanel() {
+    const statsEl = document.getElementById('adminStats');
+    const usersEl = document.getElementById('adminUsers');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    statsEl.textContent = `Users: ${users.length} | Questions: ${questionManager.getQuestions().length}`;
+    usersEl.innerHTML = users.map(u => `
+        <div class="admin-user">
+            <strong>${u.username}</strong> — ${u.role}
+        </div>
+    `).join('');
+>>>>>>> 56a26c6 (Initial commit)
 }

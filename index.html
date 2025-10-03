@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Exam System</title>
+    <link rel="stylesheet" href="style.updated.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navigation Bar -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">Online Exam System</a>
+
+                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="active">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#features">Features</a>
+                    <a href="#contact">Contact</a>
+                </div>
+
+                <div class="nav-actions" id="navActions">
+                    <button class="nav-action" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
+                    <button class="nav-action" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
+                    <button class="nav-action" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                </div>
+
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Home Page Content -->
+    <div class="home-section" id="homeSection">
+        <div class="hero">
+            <h1>Welcome to Online Exam System</h1>
+            <p>A modern platform for conducting online examinations with ease</p>
+            <div class="hero-buttons">
+                <button class="btn primary" onclick="openAuthAndShow('login')">Get Started</button>
+            
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>For Teachers</h3>
+                <p>Create and manage exams easily. Add questions, set time limits, and view results.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🎓</div>
+                <h3>For Students</h3>
+                <p>Take exams from anywhere, get instant results, and track your progress.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure</h3>
+                <p>Safe and secure platform with user authentication and data protection.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics</h3>
+                <p>Detailed performance analysis and progress tracking.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Section -->
+    <div class="auth-container hidden" id="authContainer">
+        <section id="authSection" class="auth-section">
+            <div class="auth-header">
+                <h1>Online Exam System</h1>
+            </div>
+            <div class="auth-tabs">
+                <button class="tab active" data-target="loginForm">Login</button>
+                <button class="tab" data-target="signupForm">Sign Up</button>
+                <button class="tab" data-target="adminForm">Admin</button>
+            </div>
+            <div class="auth-forms">
+                <div class="login-form auth-panel" id="loginForm">
+                    <h2>Login</h2>
+                    <form onsubmit="return handleLogin(event)">
+                        <input type="text" placeholder="Username" id="loginUsername" required>
+                        <input type="password" placeholder="Password" id="loginPassword" required>
+                        <button type="submit" class="btn primary">Login</button>
+                        <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    </form>
+                </div>
+
+                <div class="signup-form auth-panel" id="signupForm">
+                    <h2>Sign Up</h2>
+                    <form onsubmit="return handleSignup(event)">
+                        <input type="text" placeholder="Full Name" id="signupFullName" required>
+                        <input type="text" placeholder="Username" id="signupUsername" required>
+                        <input type="password" placeholder="Password" id="signupPassword" required>
+                        <input type="tel" placeholder="Mobile Number" id="signupMobile" pattern="[0-9]{11}" title="Please enter a valid 11-digit mobile number" required>
+                        <textarea id="signupAddress" placeholder="Full Address" required></textarea>
+                        <select id="role" required>
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                        <button type="submit" class="btn primary">Sign Up</button>
+                        <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    </form>
+                </div>
+
+                <div class="admin-form auth-panel hidden" id="adminForm">
+                    <h2>Admin Login</h2>
+                    <form onsubmit="return handleAdminLogin(event)">
+                        <input type="text" placeholder="Admin Username" id="adminUsername" required>
+                        <input type="password" placeholder="Admin Password" id="adminPassword" required>
+                        <button type="submit" class="btn primary">Admin Login</button>
+                        <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teacher Dashboard -->
+        <section id="teacherDashboard" class="dashboard hidden">
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Teacher Dashboard</h1>
+                </div>
+                <div class="dashboard-header-right">
+                    <button onclick="handleLogout()" class="btn">Logout</button>
+                </div>
+            </header>
+            
+            <div class="question-form">
+                <h2>Add New Question</h2>
+                <form id="questionForm" onsubmit="return handleAddQuestion(event)">
+                    <textarea placeholder="Question Text" id="questionText" required></textarea>
+                    <div id="options">
+                        <input type="text" placeholder="Option 1" required>
+                        <input type="text" placeholder="Option 2" required>
+                        <input type="text" placeholder="Option 3" required>
+                        <input type="text" placeholder="Option 4" required>
+                    </div>
+                    <select id="correctAnswer" required>
+                        <option value="">Select Correct Answer</option>
+                        <option value="0">Option 1</option>
+                        <option value="1">Option 2</option>
+                        <option value="2">Option 3</option>
+                        <option value="3">Option 4</option>
+                    </select>
+                    <button type="submit" class="btn primary">Add Question</button>
+                    <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
+                </form>
+            </div>
+
+            <div class="question-list">
+                <h2>Current Questions</h2>
+                <div id="questionsList"></div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="adminDashboard" class="dashboard hidden">
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <div class="dashboard-header-right">
+                    <button onclick="handleLogout()" class="btn">Logout</button>
+                </div>
+            </header>
+
+            <div class="admin-panel">
+                <h2>Site Overview</h2>
+                <p id="adminStats">Loading stats...</p>
+                <h3>Users</h3>
+                <div id="adminUsers"></div>
+            </div>
+        </section>
+
+        <!-- Student Dashboard -->
+        <section id="studentDashboard" class="dashboard hidden">
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Student Dashboard</h1>
+                </div>
+                <div class="dashboard-header-right">
+                    <button onclick="handleLogout()" class="btn">Logout</button>
+                </div>
+            </header>
+
+            <div class="exam-info">
+                <h2>Available Exam</h2>
+                <p>10 Questions • 30 Minutes</p>
+                <button onclick="startExam()" class="btn primary">Start Exam</button>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quizSection" class="quiz-wrapper hidden">
+            <header class="quiz-header">
+                <div class="quiz-header-left">
+                    <button onclick="backToHome()" class="btn outline small">Back to Home</button>
+                    <h1>Online Exam</h1>
+                </div>
+                <div class="meta">
+                    <div class="timer">Time left: <span id="timer">--:--</span></div>
+                    <div class="progress">Question <span id="current">0</span> / <span id="total">0</span></div>
+                </div>
+            </header>
+
+            <section id="quiz" class="quiz">
+                <div id="question-area" class="question-area">
+                    <!-- Question content will be injected here -->
+                </div>
+
+                <nav class="controls">
+                    <button id="prevBtn" class="btn" disabled>Previous</button>
+                    <button id="nextBtn" class="btn">Next</button>
+                    <button id="submitBtn" class="btn primary">Submit</button>
+                </nav>
+            </section>
+
+            <section id="result" class="result hidden">
+                <h2>Your Results</h2>
+                <p id="scoreText"></p>
+                <div id="details"></div>
+                <button onclick="returnToDashboard()" class="btn">Return to Dashboard</button>
+            </section>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Online Exam System</h3>
+                <p>Manage exams, track progress, and stay secure.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-contact">
+                <a class="contact-link" href="mailto:support@example.com">support@example.com</a>
+                <a class="contact-link" href="tel:+8801307347646">+8801307347646</a>
+            </div>
+            <div class="footer-social">
+                <p class="follow">Follow us</p>
+                <div class="social-links">
+                    <a class="social-btn fb" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook">
+                        <!-- Facebook SVG -->
+                        <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07c0 5.02 3.66 9.17 8.44 9.93v-7.03H8.2v-2.9h2.24V9.41c0-2.22 1.32-3.44 3.35-3.44.97 0 1.98.17 1.98.17v2.18h-1.12c-1.11 0-1.46.69-1.46 1.4v1.67h2.5l-.4 2.9h-2.1v7.03C18.34 21.24 22 17.09 22 12.07z" fill="#fff"/></svg>
+                        <span>Facebook</span>
+                    </a>
+                    <a class="social-btn yt" href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="Follow us on YouTube">
+                        <!-- YouTube SVG -->
+                        <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.2a2.8 2.8 0 0 0-1.96-1.98C19.86 3.5 12 3.5 12 3.5s-7.86 0-9.54.72A2.8 2.8 0 0 0 .5 6.2 29.9 29.9 0 0 0 0 12a29.9 29.9 0 0 0 .5 5.8 2.8 2.8 0 0 0 1.96 1.98C4.14 20.5 12 20.5 12 20.5s7.86 0 9.54-.72a2.8 2.8 0 0 0 1.96-1.98A29.9 29.9 0 0 0 24 12a29.9 29.9 0 0 0-.5-5.8zM9.75 15.02v-6l5.5 3-5.5 3z" fill="#fff"/></svg>
+                        <span>YouTube</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; <span id="year"></span> Online Exam System. All rights reserved.</div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="questionManager.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

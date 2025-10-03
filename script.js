@@ -22,13 +22,29 @@ const resultSection = document.getElementById('result');
 const scoreText = document.getElementById('scoreText');
 const details = document.getElementById('details');
 
+// Navigation and UI Management
+function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('show');
+}
+
+function showAuth() {
+    document.getElementById('homeSection').classList.add('hidden');
+    document.getElementById('authContainer').classList.remove('hidden');
+}
+
+function showHome() {
+    document.getElementById('homeSection').classList.remove('hidden');
+    document.getElementById('authContainer').classList.add('hidden');
+}
+
 // Check authentication status on load
 window.addEventListener('load', () => {
     const currentUser = auth.getCurrentUser();
     if (currentUser) {
         showDashboard();
     } else {
-        showAuth();
+        showHome();
     }
 });
 

@@ -5,10 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-wrapper">
-        <!-- Auth Section -->
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">Online Exam System</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#" class="active">Home</a>
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+                <button class="btn nav-btn" onclick="showAuth()">Login/Sign Up</button>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- Home Page Content -->
+    <div class="home-section" id="homeSection">
+        <div class="hero">
+            <h1>Welcome to Online Exam System</h1>
+            <p>A modern platform for conducting online examinations with ease</p>
+            <div class="hero-buttons">
+                <button class="btn primary" onclick="showAuth()">Get Started</button>
+                <button class="btn outline" onclick="location.href='#features'">Learn More</button>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>For Teachers</h3>
+                <p>Create and manage exams easily. Add questions, set time limits, and view results.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🎓</div>
+                <h3>For Students</h3>
+                <p>Take exams from anywhere, get instant results, and track your progress.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure</h3>
+                <p>Safe and secure platform with user authentication and data protection.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics</h3>
+                <p>Detailed performance analysis and progress tracking.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Section -->
+    <div class="auth-container hidden" id="authContainer">
         <section id="authSection" class="auth-section">
             <h1>Online Exam System</h1>
             <div class="auth-forms">

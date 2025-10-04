@@ -1,7 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<html lang="en">    <!-- Home Page Content -->
+    <div class="home-section" id="homeSection">
+        <div class="hero">
+            <div class="slideshow-container">
+                <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1600&q=80')">
+                    <div class="slide-number">1 / 4</div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1600&q=80')">
+                    <div class="slide-number">2 / 4</div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1600&q=80')">
+                    <div class="slide-number">3 / 4</div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1600&q=80')">
+                    <div class="slide-number">4 / 4</div>
+                </div>
+
+                <!-- Navigation buttons -->
+                <button class="slideshow-btn prev" onclick="changeSlide(-1)">❮</button>
+                <button class="slideshow-btn next" onclick="changeSlide(1)">❯</button>
+
+                <!-- Dots/circles -->
+                <div class="slideshow-dots">
+                    <span class="dot active" onclick="setSlide(0)"></span>
+                    <span class="dot" onclick="setSlide(1)"></span>
+                    <span class="dot" onclick="setSlide(2)"></span>
+                    <span class="dot" onclick="setSlide(3)"></span>
+                </div>
+            </div>
+            <div class="hero-content">
+                <h1>Welcome to Online Exam System</h1>
+                <p>A modern platform for conducting online examinations with ease</p>
+                <div class="hero-buttons">
+                    <button class="btn primary" onclick="openAuthAndShow('login')">Get Started</button>
+                </div>
+            </div>
+        </div>   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
     <link rel="stylesheet" href="style.updated.css">
@@ -22,9 +56,9 @@
                 </div>
 
                 <div class="nav-actions" id="navActions">
-                    <button class="nav-action" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
-                    <button class="nav-action" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
-                    <button class="nav-action" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                    <button class="nav-action" id="loginBtn" onclick="showLoginForm()">Login</button>
+                    <button class="nav-action" id="signupBtn" onclick="showSignupForm()">Sign Up</button>
+                    <button class="nav-action" id="adminBtn" onclick="showAdminForm()">Admin</button>
                 </div>
 
                 <button class="menu-toggle" onclick="toggleMenu()">☰</button>

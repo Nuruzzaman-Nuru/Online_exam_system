@@ -113,7 +113,58 @@ function showHome() {
 }
 
 // Wire up after DOM ready
+// Slideshow functionality
+let currentSlide = 0;
+let slideInterval;
+
+function showSlide(n) {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    
+    // Handle wrap-around
+    if (n >= slides.length) currentSlide = 0;
+    if (n < 0) currentSlide = slides.length - 1;
+    else currentSlide = n;
+    
+    // Hide all slides and remove active dots
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    // Show current slide and dot
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+}
+
+function changeSlide(n) {
+    // Stop auto-slideshow when user interacts
+    clearInterval(slideInterval);
+    showSlide(currentSlide + n);
+    // Restart auto-slideshow
+    startSlideshow();
+}
+
+function setSlide(n) {
+    // Stop auto-slideshow when user interacts
+    clearInterval(slideInterval);
+    showSlide(n);
+    // Restart auto-slideshow
+    startSlideshow();
+}
+
+function startSlideshow() {
+    // Clear any existing interval
+    if (slideInterval) clearInterval(slideInterval);
+    
+    // Start new interval
+    slideInterval = setInterval(() => {
+        showSlide(currentSlide + 1);
+    }, 4000);
+}
+
 window.addEventListener('load', () => {
+    // Start the slideshow
+    startSlideshow();
+    
     // element refs
     authContainer = document.getElementById('authContainer');
     authSection = document.getElementById('authSection');

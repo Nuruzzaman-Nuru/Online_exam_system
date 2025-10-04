@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Online Exam System</title>
+    <link rel="stylesheet" href="style.updated.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navigation Bar -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">Online Exam System</a>
+
+                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="features.html">Features</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+
+                <div class="nav-actions" id="navActions">
+                    <button class="nav-action" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Admin Section -->
+    <div class="auth-container" id="adminContainer">
+        <section id="adminSection" class="auth-section">
+            <div class="auth-header">
+                <h1>Online Exam System</h1>
+            </div>
+            <div class="admin-form auth-panel" id="adminPanel">
+                <h2>Admin Dashboard</h2>
+                <div class="admin-panel">
+                    <h2>Site Overview</h2>
+                    <p id="adminStats">Loading stats...</p>
+                    <h3>Users</h3>
+                    <div id="adminUsers"></div>
+                </div>
+                <button onclick="handleLogout()" class="btn outline small">Logout</button>
+                <button onclick="window.location.href='index.html'" class="btn outline small">Back to Home</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Online Exam System</h3>
+                <p>Manage exams, track progress, and stay secure.</p>
+            </div>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="features.html">Features</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-contact">
+                <a class="contact-link" href="mailto:support@example.com">support@example.com</a>
+                <a class="contact-link" href="tel:+8801307347646">+8801307347646</a>
+            </div>
+            <div class="footer-social">
+                <p class="follow">Follow us</p>
+                <div class="social-links">
+                    <a class="social-btn fb" href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+                    <a class="social-btn yt" href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; <span id="year"></span> Online Exam System. All rights reserved.</div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="questionManager.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

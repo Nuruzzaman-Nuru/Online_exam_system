@@ -57,11 +57,15 @@ window.addEventListener('click', (e) => {
 // Open the auth container and optionally show a specific panel (login/signup/admin)
 function openAuthAndShow(panel) {
     // Hide the home section
-    document.getElementById('homeSection').classList.add('hidden');
+    const homeSection = document.getElementById('homeSection');
+    if (homeSection) {
+        homeSection.style.display = 'none';
+    }
     
     // Show the auth container
+    const authContainer = document.getElementById('authContainer');
     if (authContainer) {
-        authContainer.classList.remove('hidden');
+        authContainer.style.display = 'block';
     }
 
     // Get the correct form ID
@@ -72,13 +76,13 @@ function openAuthAndShow(panel) {
 
     // Hide all forms first
     document.querySelectorAll('.auth-panel').forEach(form => {
-        form.classList.add('hidden');
+        form.style.display = 'none';
     });
 
     // Show the selected form
     const selectedForm = document.getElementById(formId);
     if (selectedForm) {
-        selectedForm.classList.remove('hidden');
+        selectedForm.style.display = 'block';
     }
 
     // Update tab selection
@@ -96,15 +100,28 @@ function openAuthAndShow(panel) {
     });
     
     // Add active class to clicked button
-    if (panel === 'login') document.getElementById('loginBtn').classList.add('active');
-    if (panel === 'signup') document.getElementById('signupBtn').classList.add('active');
-    if (panel === 'admin') document.getElementById('adminBtn').classList.add('active');
+    if (panel === 'login') document.getElementById('loginBtn')?.classList.add('active');
+    if (panel === 'signup') document.getElementById('signupBtn')?.classList.add('active');
+    if (panel === 'admin') document.getElementById('adminBtn')?.classList.add('active');
+}
 
-    // Show auth section
-    const authSection = document.getElementById('authSection');
-    if (authSection) {
-        authSection.classList.remove('hidden');
+// Show home section and hide auth container
+function showHome() {
+    const homeSection = document.getElementById('homeSection');
+    const authContainer = document.getElementById('authContainer');
+    
+    if (homeSection) {
+        homeSection.style.display = 'block';
     }
+    
+    if (authContainer) {
+        authContainer.style.display = 'none';
+    }
+    
+    // Remove active state from all nav buttons
+    document.querySelectorAll('.nav-action').forEach(btn => {
+        btn.classList.remove('active');
+    });
 }
 
 function showHome() {
@@ -120,6 +137,7 @@ let slideInterval;
 function showSlide(n) {
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
+    if (!slides.length || !dots.length) return;
     
     // Handle wrap-around
     if (n >= slides.length) currentSlide = 0;
@@ -155,34 +173,20 @@ function startSlideshow() {
     // Clear any existing interval
     if (slideInterval) clearInterval(slideInterval);
     
-    // Start new interval
-    slideInterval = setInterval(() => {
-        showSlide(currentSlide + 1);
-    }, 4000);
+    // Only start if there are slides
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length) {
+        slideInterval = setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 4000);
+    }
 }
 
 window.addEventListener('load', () => {
-    // Start the slideshow
-    startSlideshow();
+    // Start the slideshow if on home page
+    const slidesContainer = document.querySelector('.slideshow-container');
+    if (slidesContainer) startSlideshow();
     
-    // element refs
-    authContainer = document.getElementById('authContainer');
-    authSection = document.getElementById('authSection');
-    adminDashboard = document.getElementById('adminDashboard');
-    teacherDashboard = document.getElementById('teacherDashboard');
-    studentDashboard = document.getElementById('studentDashboard');
-    quizSection = document.getElementById('quizSection');
-    questionArea = document.getElementById('question-area');
-    prevBtn = document.getElementById('prevBtn');
-    nextBtn = document.getElementById('nextBtn');
-    submitBtn = document.getElementById('submitBtn');
-    timerEl = document.getElementById('timer');
-    currentEl = document.getElementById('current');
-    totalEl = document.getElementById('total');
-    resultSection = document.getElementById('result');
-    scoreText = document.getElementById('scoreText');
-    details = document.getElementById('details');
-
     // footer year
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -192,17 +196,14 @@ window.addEventListener('load', () => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.auth-tabs .tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            document.querySelectorAll('.auth-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.auth-panel').forEach(p => {
+                p.style.display = 'none';
+            });
             const target = tab.getAttribute('data-target');
             const panelEl = document.getElementById(target);
-            if (panelEl) panelEl.classList.remove('hidden');
+            if (panelEl) panelEl.style.display = 'block';
         });
     });
-
-    // button wiring (guarding in case elements missing)
-    if (prevBtn) prevBtn.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); }});
-    if (nextBtn) nextBtn.addEventListener('click', () => { const questions = questionManager.getQuestions(); if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }});
-    if (submitBtn) submitBtn.addEventListener('click', () => { if (confirm('Are you sure you want to submit your exam?')) submitQuiz(); });
 
     // nav action buttons: keep all buttons visible when clicked
     const navActions = document.getElementById('navActions');
@@ -215,12 +216,69 @@ window.addEventListener('load', () => {
         });
     }
 
+    // Quiz controls
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const questions = questionManager.getQuestions();
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            }
+        });
+    }
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to submit your exam?')) {
+                submitQuiz();
+            }
+        });
+    }
+
     // initial view depending on auth state (auth.js expected)
     try {
         const currentUser = auth.getCurrentUser();
         if (currentUser) showDashboard(); else showHome();
     } catch (e) {
         showHome();
+    }
+
+    // Teacher Dashboard Controls
+    const addQuestionBtn = document.getElementById('showAddQuestionForm');
+    const viewQuestionsBtn = document.getElementById('showQuestionList');
+
+    if (addQuestionBtn) {
+        addQuestionBtn.addEventListener('click', () => {
+            const form = document.getElementById('addQuestionForm');
+            const list = document.getElementById('questionList');
+            if (form) form.style.display = 'block';
+            if (list) list.style.display = 'none';
+        });
+    }
+
+    if (viewQuestionsBtn) {
+        viewQuestionsBtn.addEventListener('click', () => {
+            const form = document.getElementById('addQuestionForm');
+            const list = document.getElementById('questionList');
+            if (form) form.style.display = 'none';
+            if (list) {
+                list.style.display = 'block';
+                renderQuestionList();
+            }
+        });
     }
 });
 
@@ -363,21 +421,26 @@ function showAuth() {
 }
 
 function showDashboard() {
-    if (authSection) authSection.classList.add('hidden');
-    if (quizSection) quizSection.classList.add('hidden');
-
-    // hide all dashboards first
-    if (teacherDashboard) teacherDashboard.classList.add('hidden');
-    if (studentDashboard) studentDashboard.classList.add('hidden');
-    if (adminDashboard) adminDashboard.classList.add('hidden');
+    const authContainer = document.getElementById('authContainer');
+    if (authContainer) authContainer.style.display = 'none';
 
     try {
-        if (auth.isAdmin()) { if (adminDashboard) adminDashboard.classList.remove('hidden'); renderAdminPanel(); }
-        else if (auth.isTeacher()) { if (teacherDashboard) teacherDashboard.classList.remove('hidden'); renderQuestionList(); }
-        else { if (studentDashboard) studentDashboard.classList.remove('hidden'); }
+        const user = auth.getCurrentUser();
+        if (!user) {
+            openAuthAndShow('login');
+            return;
+        }
+
+        if (user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        } else if (user.role === 'teacher') {
+            window.location.href = 'teacher-dashboard.html';
+        } else {
+            window.location.href = 'student-dashboard.html';
+        }
     } catch (e) {
-        // fallback
-        if (studentDashboard) studentDashboard.classList.remove('hidden');
+        // If there's an error, redirect to home page
+        window.location.href = 'index.html';
     }
 }
 
@@ -427,9 +490,26 @@ function startExam() {
     startTimer(); renderQuestion();
 }
 
-function startTimer() { updateTimerDisplay(); timerInterval = setInterval(() => { timeLeft--; if (timeLeft <= 0) { clearInterval(timerInterval); submitQuiz(); return; } updateTimerDisplay(); }, 1000); }
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz();
+            return;
+        }
+        updateTimerDisplay();
+    }, 1000);
+}
 
-function updateTimerDisplay() { if (!timerEl) return; const minutes = Math.floor(timeLeft / 60); const seconds = timeLeft % 60; timerEl.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`; }
+function updateTimerDisplay() {
+    const timerEl = document.getElementById('timer');
+    if (!timerEl) return;
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
 
 function renderQuestion() {
     const questions = questionManager.getQuestions();

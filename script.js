@@ -56,23 +56,33 @@ window.addEventListener('click', (e) => {
 
 // Open the auth container and optionally show a specific panel (login/signup/admin)
 function openAuthAndShow(panel) {
-    // Hide the home section
+    // First, make sure all elements exist
     const homeSection = document.getElementById('homeSection');
-    if (homeSection) {
-        homeSection.style.display = 'none';
-    }
-    
-    // Show the auth container
     const authContainer = document.getElementById('authContainer');
-    if (authContainer) {
-        authContainer.style.display = 'block';
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const adminForm = document.getElementById('adminForm');
+
+    if (!authContainer || !homeSection || !loginForm || !signupForm || !adminForm) {
+        console.error('Required elements not found');
+        return;
     }
 
+    // Hide the home section
+    homeSection.style.display = 'none';
+    
+    // Show the auth container
+    authContainer.style.display = 'block';
+
     // Get the correct form ID
-    let formId;
-    if (panel === 'login') formId = 'loginForm';
-    if (panel === 'signup') formId = 'signupForm';
-    if (panel === 'admin') formId = 'adminForm';
+    const formMap = {
+        login: 'loginForm',
+        signup: 'signupForm',
+        admin: 'adminForm'
+    };
+
+    const formId = formMap[panel];
+    if (!formId) return;
 
     // Hide all forms first
     document.querySelectorAll('.auth-panel').forEach(form => {
@@ -87,10 +97,9 @@ function openAuthAndShow(panel) {
 
     // Update tab selection
     document.querySelectorAll('.auth-tabs .tab').forEach(tab => {
+        tab.classList.remove('active');
         if (tab.getAttribute('data-target') === formId) {
             tab.classList.add('active');
-        } else {
-            tab.classList.remove('active');
         }
     });
 
@@ -98,11 +107,19 @@ function openAuthAndShow(panel) {
     document.querySelectorAll('.nav-action').forEach(btn => {
         btn.classList.remove('active');
     });
-    
+
     // Add active class to clicked button
-    if (panel === 'login') document.getElementById('loginBtn')?.classList.add('active');
-    if (panel === 'signup') document.getElementById('signupBtn')?.classList.add('active');
-    if (panel === 'admin') document.getElementById('adminBtn')?.classList.add('active');
+    const buttonMap = {
+        login: 'loginBtn',
+        signup: 'signupBtn',
+        admin: 'adminBtn'
+    };
+
+    const buttonId = buttonMap[panel];
+    if (buttonId) {
+        const button = document.getElementById(buttonId);
+        if (button) button.classList.add('active');
+    }
 }
 
 // Show home section and hide auth container
@@ -122,11 +139,22 @@ function showHome() {
     document.querySelectorAll('.nav-action').forEach(btn => {
         btn.classList.remove('active');
     });
-}
 
-function showHome() {
-    document.getElementById('homeSection').classList.remove('hidden');
-    if (authContainer) authContainer.classList.add('hidden');
+    // Hide all auth panels
+    document.querySelectorAll('.auth-panel').forEach(panel => {
+        panel.style.display = 'none';
+    });
+
+    // Reset active tab
+    document.querySelectorAll('.auth-tabs .tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Set login tab as active by default
+    const loginTab = document.querySelector('.auth-tabs .tab[data-target="loginForm"]');
+    if (loginTab) {
+        loginTab.classList.add('active');
+    }
 }
 
 // Wire up after DOM ready
@@ -182,14 +210,28 @@ function startSlideshow() {
     }
 }
 
+// Load common footer
+async function loadFooter() {
+    try {
+        const response = await fetch('footer.html');
+        const footerContent = await response.text();
+        document.body.insertAdjacentHTML('beforeend', footerContent);
+        
+        // Set footer year
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    } catch (error) {
+        console.error('Error loading footer:', error);
+    }
+}
+
 window.addEventListener('load', () => {
+    // Load the footer
+    loadFooter();
+
     // Start the slideshow if on home page
     const slidesContainer = document.querySelector('.slideshow-container');
     if (slidesContainer) startSlideshow();
-    
-    // footer year
-    const yearEl = document.getElementById('year');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     // auth tabs
     document.querySelectorAll('.auth-tabs .tab').forEach(tab => {

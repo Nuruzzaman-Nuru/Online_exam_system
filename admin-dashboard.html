@@ -4,60 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Online Exam System</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <!-- Header with Navigation Bar -->
-    <header class="site-header">
-        <nav class="navbar">
-            <div class="nav-content">
-                <a href="index.html" class="nav-logo">Online Exam System</a>
-
-                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="features.html">Features</a>
-                    <a href="contact.html">Contact</a>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
+                    </div>
                 </div>
-
-                <div class="nav-actions" id="navActions">
-                    <button class="nav-action" onclick="handleLogout()">Logout</button>
+                <div class="flex items-center">
+                    <span class="text-gray-600 mr-4" id="adminName">Admin</span>
+                    <button onclick="handleLogout()" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">Logout</button>
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <!-- Admin Section -->
-    <div class="auth-container" id="adminContainer">
-        <section id="adminSection" class="auth-section">
-            <div class="auth-header">
-                <h1>Online Exam System</h1>
-            </div>
-            <div class="admin-form auth-panel" id="adminPanel">
-                <h2>Admin Dashboard</h2>
-                <div class="admin-panel">
-                    <h2>Site Overview</h2>
-                    <p id="adminStats">Loading stats...</p>
-                    <h3>Users</h3>
-                    <div id="adminUsers"></div>
+    <!-- Main Content -->
+    <div class="pt-16">
+        <!-- Stats Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Total Users -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-500">Total Users</p>
+                            <h3 class="text-2xl font-bold" id="totalUsers">0</h3>
+                        </div>
+                    </div>
                 </div>
-                <button onclick="handleLogout()" class="btn outline small">Logout</button>
-                <button onclick="window.location.href='index.html'" class="btn outline small">Back to Home</button>
+                
+                <!-- Active Users -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600">
+                            <i class="fas fa-user-check text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-500">Active Users</p>
+                            <h3 class="text-2xl font-bold" id="activeUsers">0</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Total Exams -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                            <i class="fas fa-file-alt text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-500">Total Exams</p>
+                            <h3 class="text-2xl font-bold" id="totalExams">0</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-800">User Management</h2>
+                        <button onclick="showAddUserModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                            Add New User
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <!-- User Filters -->
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <button onclick="filterUsers('all')" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700">All Users</button>
+                        <button onclick="filterUsers('student')" class="px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700">Students</button>
+                        <button onclick="filterUsers('teacher')" class="px-4 py-2 rounded-lg bg-green-100 hover:bg-green-200 text-green-700">Teachers</button>
+                        <button onclick="filterUsers('admin')" class="px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700">Admins</button>
+                    </div>
+
+                    <!-- User List -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="userList">
+                                <!-- User rows will be inserted here by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add User Modal -->
+        <div id="addUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-lg bg-white">
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Add New User</h3>
+                    <form id="addUserForm" class="mt-4 text-left">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="fullName">
+                                Full Name
+                            </label>
+                            <input type="text" id="fullName" name="fullName" required 
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Username/Email
+                            </label>
+                            <input type="email" id="username" name="username" required 
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                                Password
+                            </label>
+                            <input type="password" id="password" name="password" required 
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="role">
+                                Role
+                            </label>
+                            <select id="role" name="role" required 
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between mt-6">
+                            <button type="button" onclick="closeAddUserModal()" 
+                                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Add User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Footer will be loaded here -->
-    <div id="footer-placeholder"></div>
-
-     <script src="./js/auth.js"></script>
-    <script src="./js/questionManager.js"></script>
-    <script src="./js/script.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/questionManager.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFooter();
+        // Check if user is authenticated and is admin
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = auth.getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Set admin name
+            document.getElementById('adminName').textContent = currentUser.fullName || 'Admin';
+            
+            // Load dashboard data
+            loadDashboardData();
+            loadUsers();
         });
+
+        function loadDashboardData() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Update stats
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('activeUsers').textContent = users.filter(u => u.active !== false).length;
+            document.getElementById('totalExams').textContent = questionManager.getQuestions().length;
+        }
+
+        function loadUsers(filter = 'all') {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const filteredUsers = filter === 'all' ? users : users.filter(u => u.role === filter);
+            const userList = document.getElementById('userList');
+            
+            userList.innerHTML = filteredUsers.map(user => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <span class="text-gray-600 font-medium">${user.fullName?.charAt(0) || 'U'}</span>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${user.fullName}</div>
+                                <div class="text-sm text-gray-500">${user.username}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                            user.role === 'teacher' ? 'bg-green-100 text-green-800' : 
+                            'bg-blue-100 text-blue-800'}">
+                            ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${user.active !== false ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${user.active !== false ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="editUser('${user.id}')" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                        <button onclick="toggleUserStatus('${user.id}')" class="text-${user.active !== false ? 'red' : 'green'}-600 hover:text-${user.active !== false ? 'red' : 'green'}-900">
+                            ${user.active !== false ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterUsers(role) {
+            loadUsers(role);
+        }
+
+        function showAddUserModal() {
+            document.getElementById('addUserModal').classList.remove('hidden');
+        }
+
+        function closeAddUserModal() {
+            document.getElementById('addUserModal').classList.add('hidden');
+            document.getElementById('addUserForm').reset();
+        }
+
+        function toggleUserStatus(userId) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.id === userId);
+            
+            if (userIndex !== -1) {
+                users[userIndex].active = !users[userIndex].active;
+                localStorage.setItem('users', JSON.stringify(users));
+                loadUsers();
+                loadDashboardData();
+            }
+        }
+
+        function editUser(userId) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            // Show edit modal with user data
+            showAddUserModal();
+            document.getElementById('fullName').value = user.fullName || '';
+            document.getElementById('username').value = user.username || '';
+            document.getElementById('role').value = user.role || 'student';
+        }
+
+        // Handle add user form submission
+        document.getElementById('addUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const userData = {
+                fullName: document.getElementById('fullName').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                role: document.getElementById('role').value,
+                active: true
+            };
+
+            try {
+                auth.signup(userData);
+                closeAddUserModal();
+                loadUsers();
+                loadDashboardData();
+                alert('User added successfully!');
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        function handleLogout() {
+            auth.logout();
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>

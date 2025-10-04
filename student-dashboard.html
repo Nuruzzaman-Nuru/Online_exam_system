@@ -4,94 +4,326 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - Online Exam System</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <!-- Header with Navigation Bar -->
-    <header class="site-header">
-        <nav class="navbar">
-            <div class="nav-content">
-                <a href="index.html" class="nav-logo">Online Exam System</a>
-
-                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="features.html">Features</a>
-                    <a href="contact.html">Contact</a>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-gray-800">Student Dashboard</h1>
+                    </div>
                 </div>
-
-                <div class="nav-actions" id="navActions">
-                    <button class="nav-action" onclick="handleLogout()">Logout</button>
+                <div class="flex items-center">
+                    <span class="text-gray-600 mr-4" id="studentName">Student</span>
+                    <button onclick="handleLogout()" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">Logout</button>
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <!-- Student Dashboard -->
-    <div class="dashboard-container">
-        <section id="studentDashboard" class="dashboard">
-            <header class="dashboard-header">
-                <div class="dashboard-header-left">
-                    <button onclick="window.location.href='index.html'" class="btn outline small">Back to Home</button>
-                    <h1>Student Dashboard</h1>
+    <!-- Main Content -->
+    <div class="pt-16">
+        <!-- Stats Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Available Exams -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-file-alt text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-500">Available Exams</p>
+                            <h3 class="text-2xl font-bold" id="availableExams">0</h3>
+                        </div>
+                    </div>
                 </div>
-                <div class="dashboard-header-right">
-                    <button onclick="handleLogout()" class="btn">Logout</button>
+                
+                <!-- Completed Exams -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600">
+                            <i class="fas fa-check-circle text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-500">Completed Exams</p>
+                            <h3 class="text-2xl font-bold" id="completedExams">0</h3>
+                        </div>
+                    </div>
                 </div>
-            </header>
-
-            <div class="exam-info">
-                <h2>Available Exam</h2>
-                <p>10 Questions • 30 Minutes</p>
-                <button onclick="startExam()" class="btn primary">Start Exam</button>
+                
+                <!-- Your Average Score -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                            <i class="fas fa-star text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-500">Your Average</p>
+                            <h3 class="text-2xl font-bold" id="averageScore">0%</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Current Exam Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="studentDashboard">
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Current Exam</h2>
+                </div>
+                <div class="p-6">
+                    <div class="text-center py-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">General Knowledge Quiz</h3>
+                        <div class="flex justify-center space-x-8 mb-8">
+                            <div class="flex items-center">
+                                <i class="far fa-clock text-gray-500 mr-2"></i>
+                                <span class="text-gray-700">30 Minutes</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="far fa-question-circle text-gray-500 mr-2"></i>
+                                <span class="text-gray-700">10 Questions</span>
+                            </div>
+                        </div>
+                        <button onclick="startExam()" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition duration-150 ease-in-out">
+                            Start Exam
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Quiz Section -->
-        <section id="quizSection" class="quiz-wrapper" style="display: none;">
-            <header class="quiz-header">
-                <div class="quiz-header-left">
-                    <button onclick="returnToDashboard()" class="btn outline small">Back to Dashboard</button>
-                    <h1>Online Exam</h1>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 hidden" id="quizSection">
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-800">Online Exam</h2>
+                        <div class="flex items-center space-x-4">
+                            <div class="text-gray-600">
+                                Time left: <span id="timer" class="font-bold">--:--</span>
+                            </div>
+                            <div class="text-gray-600">
+                                Question <span id="current" class="font-bold">0</span> of <span id="total" class="font-bold">0</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="meta">
-                    <div class="timer">Time left: <span id="timer">--:--</span></div>
-                    <div class="progress">Question <span id="current">0</span> / <span id="total">0</span></div>
+                <div class="p-6">
+                    <div id="question-area" class="mb-8">
+                        <!-- Question content will be injected here -->
+                    </div>
+                    <div class="flex justify-between">
+                        <button id="prevBtn" disabled 
+                                class="bg-gray-500 text-white font-medium py-2 px-6 rounded-lg transition duration-150 ease-in-out disabled:opacity-50">
+                            Previous
+                        </button>
+                        <button id="nextBtn" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-150 ease-in-out">
+                            Next
+                        </button>
+                        <button id="submitBtn" 
+                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition duration-150 ease-in-out">
+                            Submit
+                        </button>
+                    </div>
                 </div>
-            </header>
+            </div>
+        </div>
 
-            <section id="quiz" class="quiz">
-                <div id="question-area" class="question-area">
-                    <!-- Question content will be injected here -->
+        <!-- Result Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 hidden" id="resultSection">
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Exam Results</h2>
                 </div>
-
-                <nav class="controls">
-                    <button id="prevBtn" class="btn" disabled>Previous</button>
-                    <button id="nextBtn" class="btn">Next</button>
-                    <button id="submitBtn" class="btn primary">Submit</button>
-                </nav>
-            </section>
-
-            <section id="result" class="result" style="display: none;">
-                <h2>Your Results</h2>
-                <p id="scoreText"></p>
-                <div id="details"></div>
-                <button onclick="returnToDashboard()" class="btn">Return to Dashboard</button>
-            </section>
-        </section>
+                <div class="p-6">
+                    <div class="text-center mb-8">
+                        <h3 id="scoreText" class="text-3xl font-bold text-gray-900 mb-2">Your Score: 0%</h3>
+                        <p class="text-gray-600">Exam completed successfully!</p>
+                    </div>
+                    <div id="details" class="space-y-4">
+                        <!-- Result details will be injected here -->
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="returnToDashboard()" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition duration-150 ease-in-out">
+                            Return to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Footer will be loaded here -->
-    <div id="footer-placeholder"></div>
-
-      <script src="./js/auth.js"></script>
-    <script src="./js/questionManager.js"></script>
-    <script src="./js/script.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/questionManager.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFooter();
+        // Check if user is authenticated and is student
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = auth.getCurrentUser();
+            if (!currentUser || currentUser.role !== 'student') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Set student name
+            document.getElementById('studentName').textContent = currentUser.fullName || 'Student';
+            
+            // Load dashboard data
+            loadDashboardData();
+            initializeExam();
         });
+
+        function loadDashboardData() {
+            // In a real app, fetch this data from backend
+            document.getElementById('availableExams').textContent = '1';
+            document.getElementById('completedExams').textContent = '0';
+            document.getElementById('averageScore').textContent = '0%';
+        }
+
+        function initializeExam() {
+            const questions = questionManager.getQuestions();
+            if (questions.length === 0) {
+                alert('No questions available.');
+                return;
+            }
+            document.getElementById('total').textContent = questions.length;
+        }
+
+        function startExam() {
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            currentIndex = 0;
+            userAnswers = {};
+            timeLeft = 30 * 60; // 30 minutes
+            startTimer();
+            renderQuestion();
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuiz();
+                    return;
+                }
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function renderQuestion() {
+            const questions = questionManager.getQuestions();
+            if (!questions || questions.length === 0) return;
+            
+            const q = questions[currentIndex];
+            document.getElementById('current').textContent = currentIndex + 1;
+            
+            const questionArea = document.getElementById('question-area');
+            questionArea.innerHTML = `
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                        ${currentIndex + 1}. ${q.q}
+                    </h3>
+                    <div class="space-y-3">
+                        ${q.options.map((opt, idx) => `
+                            <label class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="answer" value="${idx}" 
+                                       class="h-4 w-4 text-blue-600" 
+                                       ${userAnswers[q.id] === idx ? 'checked' : ''}>
+                                <span class="ml-3 text-gray-700">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === questions.length - 1;
+            
+            // Wire up radio buttons
+            questionArea.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    userAnswers[q.id] = parseInt(input.value);
+                });
+            });
+        }
+
+        function submitQuiz() {
+            const questions = questionManager.getQuestions();
+            let score = 0;
+            const results = questions.map(q => {
+                const isCorrect = userAnswers[q.id] === q.answer;
+                if (isCorrect) score++;
+                return {
+                    question: q.q,
+                    userAnswer: q.options[userAnswers[q.id]] || 'Not answered',
+                    correctAnswer: q.options[q.answer],
+                    isCorrect
+                };
+            });
+
+            // Clear timer
+            if (timerInterval) clearInterval(timerInterval);
+            
+            // Hide quiz section and show results
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            // Update results
+            document.getElementById('scoreText').textContent = 
+                `Score: ${score} out of ${questions.length} (${Math.round((score/questions.length)*100)}%)`;
+            
+            document.getElementById('details').innerHTML = results.map((r, idx) => `
+                <div class="p-4 border rounded-lg ${r.isCorrect ? 'bg-green-50' : 'bg-red-50'}">
+                    <h4 class="font-semibold text-gray-900 mb-2">Question ${idx + 1}</h4>
+                    <p class="text-gray-700 mb-2">${r.question}</p>
+                    <p class="text-gray-600">Your answer: ${r.userAnswer}</p>
+                    <p class="text-gray-600">Correct answer: ${r.correctAnswer}</p>
+                </div>
+            `).join('');
+        }
+
+        function returnToDashboard() {
+            // Reset exam state
+            if (timerInterval) clearInterval(timerInterval);
+            currentIndex = 0;
+            userAnswers = {};
+            timeLeft = 30 * 60;
+            document.getElementById('timer').textContent = '--:--';
+            
+            // Show dashboard, hide other sections
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.remove('hidden');
+            
+            // Update stats
+            loadDashboardData();
+        }
+
+        function handleLogout() {
+            auth.logout();
+            window.location.href = 'index.html';
+        }
     </script>
+</body>
+</html>
 </body>
 </html>

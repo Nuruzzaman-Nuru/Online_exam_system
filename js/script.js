@@ -1,6 +1,6 @@
 // Enhanced Online Exam System - cleaned and DOM-safe
 
-// State
+// State management
 let currentIndex = 0;
 let userAnswers = {};
 let timeLeft = 30 * 60; // default 30 minutes
@@ -24,6 +24,7 @@ let resultSection = null;
 let scoreText = null;
 let details = null;
 
+// Toggle mobile menu visibility
 function toggleMenu() {
     // On mobile, the hamburger should show only the center links and keep actions hidden
     const center = document.getElementById('navCenter');
@@ -34,6 +35,139 @@ function toggleMenu() {
         if (isShown && actions) actions.classList.remove('show');
     }
 }
+
+// Authentication UI functions
+function toggleAuth() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.toggle('hidden');
+    }
+}
+
+function showAuthTab(tab) {
+    // Hide all forms
+    document.querySelectorAll('#loginForm, #signupForm').forEach(form => {
+        form.classList.add('hidden');
+    });
+    
+    // Show selected form
+    const selectedForm = document.getElementById(tab + 'Form');
+    if (selectedForm) {
+        selectedForm.classList.remove('hidden');
+    }
+    
+    // Update tab styling
+    document.querySelectorAll('.auth-tabs button').forEach(button => {
+        if (button.textContent.toLowerCase().includes(tab)) {
+            button.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            button.classList.remove('text-gray-500');
+        } else {
+            button.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+            button.classList.add('text-gray-500');
+        }
+    });
+}
+
+// Login form submission handler
+function handleLoginSubmit() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    // Validate inputs
+    if (!username || !password) {
+        alert('Please enter both username and password');
+        return;
+    }
+
+    try {
+        const user = auth.login(username, password);
+        toggleAuth(); // Close the modal
+
+        // Redirect based on user role
+        if (user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        } else if (user.role === 'teacher') {
+            window.location.href = 'teacher-dashboard.html';
+        } else {
+            window.location.href = 'student-dashboard.html';
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Signup form submission handler
+function handleSignupSubmit() {
+    // Get form values
+    const fullName = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+
+    // Validate inputs
+    if (!fullName || !email || !password) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    // Basic email validation
+    if (!email.includes('@') || !email.includes('.')) {
+        alert('Please enter a valid email address');
+        return;
+    }
+
+    try {
+        const userData = {
+            fullName,
+            username: email,
+            password,
+            role: 'student', // Default role
+            mobile: '',
+            address: ''
+        };
+
+        auth.signup(userData);
+        alert('Account created successfully! You can now login.');
+        showAuthTab('login'); // Switch to login tab
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Logout handler
+function handleLogout() {
+    auth.logout();
+    window.location.href = 'index.html';
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', () => {
+    // Check authentication state
+    const currentUser = auth.getCurrentUser();
+    const authButtons = document.getElementById('authButtons');
+    
+    if (currentUser) {
+        // User is logged in
+        if (currentUser.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        } else if (currentUser.role === 'teacher') {
+            window.location.href = 'teacher-dashboard.html';
+        } else if (currentUser.role === 'student') {
+            window.location.href = 'student-dashboard.html';
+        }
+        
+        // Show logout button, hide login button
+        if (authButtons) {
+            authButtons.querySelector('button:first-child').classList.add('hidden');
+            authButtons.querySelector('button:last-child').classList.remove('hidden');
+        }
+    } else {
+        // User is not logged in
+        if (authButtons) {
+            authButtons.querySelector('button:first-child').classList.remove('hidden');
+            authButtons.querySelector('button:last-child').classList.add('hidden');
+        }
+    }
+});
 
 // Close mobile menus when clicking outside
 window.addEventListener('click', (e) => {

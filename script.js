@@ -215,11 +215,13 @@ async function loadFooter() {
     try {
         const response = await fetch('footer.html');
         const footerContent = await response.text();
-        document.body.insertAdjacentHTML('beforeend', footerContent);
-        
-        // Set footer year
-        const yearEl = document.getElementById('year');
-        if (yearEl) yearEl.textContent = new Date().getFullYear();
+        const footerPlaceholder = document.getElementById('footer-placeholder');
+        if (footerPlaceholder) {
+            footerPlaceholder.innerHTML = footerContent;
+            // Set footer year
+            const yearEl = document.getElementById('year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+        }
     } catch (error) {
         console.error('Error loading footer:', error);
     }
@@ -349,6 +351,18 @@ function handleAdminLogin(event) {
     } catch (error) {
         alert(error.message);
     }
+}
+
+function handleContactSubmit(event) {
+    event.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    // In a real application, this would send the data to a server
+    alert('Thank you for your message! We will get back to you soon.');
+    event.target.reset();
 }
 
 function handleSignup(event) {

@@ -5,65 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
     <link rel="stylesheet" href="style.updated.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Header with Navigation Bar -->
-    <header class="site-header">
-        <nav class="navbar">
-            <div class="nav-content">
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-left">
                 <a href="index.html" class="nav-logo">Online Exam System</a>
-
-                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
-                    <a href="index.html" class="active">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="features.html">Features</a>
-                    <a href="contact.html">Contact</a>
-                </div>
-
-                <div class="nav-actions" id="navActions">
-                    <button class="nav-action" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
-                    <button class="nav-action" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
-                    <button class="nav-action" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
-                </div>
-
-                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
             </div>
-        </nav>
-    </header>
+            <div class="nav-right" id="navActions">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="features.html" class="nav-link">Features</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn combined" onclick="openAuthAndShow('login')">Login | Sign Up</button>
+                </div>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
 
     <!-- Home Page Content -->
     <div class="home-section" id="homeSection">
+        <!-- Hero Section -->
         <div class="hero">
-            <h1>Welcome to Online Exam System</h1>
-            <p>A modern platform for conducting online examinations with ease</p>
-            <div class="hero-buttons">
-                <button class="btn primary" onclick="openAuthAndShow('signup')">Get Started</button>
+            <div class="hero-content">
+                <h1>Welcome to Online Exam System</h1>
+                <p>A modern platform for conducting online examinations with ease. Join us to experience seamless testing and evaluation.</p>
+                <div class="hero-buttons">
+                    <button class="btn primary" onclick="openAuthAndShow('signup')">Get Started</button>
+                    <button class="btn secondary" onclick="openAuthAndShow('login')">Login Now</button>
+                </div>
             </div>
         </div>
 
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">👨‍🏫</div>
-                <h3>For Teachers</h3>
-                <p>Create and manage exams easily. Add questions, set time limits, and view results.</p>
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2>Why Choose Us</h2>
+                <p>Discover the benefits of our online examination system</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">👨‍🎓</div>
-                <h3>For Students</h3>
-                <p>Take exams from anywhere, get instant results, and track your progress.</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>For Teachers</h3>
+                    <p>Create and manage exams easily. Set questions, time limits, and analyze results efficiently.</p>
+                    <ul class="feature-list">
+                        <li>Easy exam creation</li>
+                        <li>Automatic grading</li>
+                        <li>Result analytics</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>For Students</h3>
+                    <p>Take exams from anywhere, get instant results, and track your progress seamlessly.</p>
+                    <ul class="feature-list">
+                        <li>Remote access</li>
+                        <li>Instant results</li>
+                        <li>Progress tracking</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Platform</h3>
+                    <p>Advanced security measures to ensure exam integrity and data protection.</p>
+                    <ul class="feature-list">
+                        <li>Data encryption</li>
+                        <li>Safe authentication</li>
+                        <li>Anti-cheating system</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Smart Analytics</h3>
+                    <p>Comprehensive analytics and reporting tools for better insights.</p>
+                    <ul class="feature-list">
+                        <li>Performance metrics</li>
+                        <li>Detailed reports</li>
+                        <li>Progress charts</li>
+                    </ul>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Secure</h3>
-                <p>Safe and secure platform with user authentication and data protection.</p>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <div class="stat-item">
+                <h3>1000+</h3>
+                <p>Active Users</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Analytics</h3>
-                <p>Detailed performance analysis and progress tracking.</p>
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Exams Conducted</p>
             </div>
-        </div>
+            <div class="stat-item">
+                <h3>98%</h3>
+                <p>Success Rate</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Support Available</p>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to Get Started?</h2>
+                <p>Join our platform today and experience the future of online examinations.</p>
+                <button class="btn primary" onclick="openAuthAndShow('signup')">Create Account</button>
+            </div>
+        </section>
     </div>
 
     <!-- Auth Section -->
@@ -87,7 +157,6 @@
                         <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
                     </form>
                 </div>
-
                 <div class="signup-form auth-panel" id="signupForm" style="display: none;">
                     <h2>Sign Up</h2>
                     <form onsubmit="return handleSignup(event)">
@@ -120,8 +189,51 @@
 
     </div>
 
-    <!-- Footer will be loaded here -->
-    <div id="footer-placeholder"></div>
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Online Exam System</h3>
+                <p>Making education assessment accessible and efficient</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="about.html">About Us</a>
+                <a href="features.html">Features</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <a href="tel:+880123456789" class="contact-link">
+                    <i class="fas fa-phone"></i> +880 123 456 789
+                </a>
+                <a href="mailto:info@onlineexam.com" class="contact-link">
+                    <i class="fas fa-envelope"></i> info@onlineexam.com
+                </a>
+                <p class="contact-link">
+                    <i class="fas fa-location-dot"></i> Dhaka, Bangladesh
+                </p>
+            </div>
+            
+            <div class="footer-social">
+                <p class="follow">Follow Us</p>
+                <div class="social-links">
+                    <a href="#" class="social-btn fb">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-btn yt">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Online Exam System. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="auth.js"></script>
     <script src="questionManager.js"></script>

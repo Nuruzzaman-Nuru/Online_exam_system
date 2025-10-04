@@ -9,28 +9,25 @@
 </head>
 <body>
     <!-- Header with Navigation Bar -->
-    <header class="site-header">
-        <nav class="navbar">
-            <div class="nav-content">
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-left">
                 <a href="index.html" class="nav-logo">Online Exam System</a>
-
-                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+            </div>
+            <div class="nav-right" id="navActions">
+                <div class="nav-links">
                     <a href="index.html">Home</a>
                     <a href="about.html">About</a>
                     <a href="features.html" class="active">Features</a>
                     <a href="contact.html">Contact</a>
                 </div>
-
-                <div class="nav-actions" id="navActions">
-                    <button class="nav-action" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
-                    <button class="nav-action" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
-                    <button class="nav-action" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                <div class="nav-buttons">
+                    <button class="nav-btn combined" onclick="openAuthAndShow('login')">Login | Sign Up</button>
                 </div>
-
-                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
             </div>
-        </nav>
-    </header>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
 
     <!-- Features Page Content -->
     <div class="page-content">

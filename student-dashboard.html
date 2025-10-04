@@ -82,8 +82,16 @@
         </section>
     </div>
 
+    <!-- Footer will be loaded here -->
+    <div id="footer-placeholder"></div>
+
     <script src="auth.js"></script>
     <script src="questionManager.js"></script>
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFooter();
+        });
+    </script>
 </body>
 </html>

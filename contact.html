@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Online Exam System</title>
+    <link rel="stylesheet" href="style.updated.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navigation Bar -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">Online Exam System</a>
+
+                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="features.html">Features</a>
+                    <a href="contact.html" class="active">Contact</a>
+                </div>
+
+                <div class="nav-actions" id="navActions">
+                    <button class="nav-action" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
+                    <button class="nav-action" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
+                    <button class="nav-action" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                </div>
+
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contact Page Content -->
+    <div class="page-content">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <section class="contact-section">
+                        <h3>Get in Touch</h3>
+                        <p>Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                        
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <strong>Email:</strong>
+                                <a href="mailto:support@example.com">support@example.com</a>
+                            </div>
+                            <div class="contact-item">
+                                <strong>Phone:</strong>
+                                <a href="tel:+8801307347646">+880 130 734 7646</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="contact-form">
+                        <h3>Send us a Message</h3>
+                        <form id="contactForm" onsubmit="return handleContactSubmit(event)">
+                            <div class="form-group">
+                                <input type="text" id="name" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" placeholder="Your Email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="subject" placeholder="Subject" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn primary">Send Message</button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Online Exam System</h3>
+                <p>Manage exams, track progress, and stay secure.</p>
+            </div>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="features.html">Features</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-contact">
+                <a class="contact-link" href="mailto:support@example.com">support@example.com</a>
+                <a class="contact-link" href="tel:+8801307347646">+8801307347646</a>
+            </div>
+            <div class="footer-social">
+                <p class="follow">Follow us</p>
+                <div class="social-links">
+                    <a class="social-btn fb" href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+                    <a class="social-btn yt" href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; <span id="year"></span> Online Exam System. All rights reserved.</div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

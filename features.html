@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - Online Exam System</title>
+    <link rel="stylesheet" href="style.updated.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navigation Bar -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">Online Exam System</a>
+
+                <div class="nav-center" id="navCenter" role="navigation" aria-label="Main navigation">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="features.html" class="active">Features</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+
+                <div class="nav-actions" id="navActions">
+                    <button class="nav-action" id="loginBtn" onclick="openAuthAndShow('login')">Login</button>
+                    <button class="nav-action" id="signupBtn" onclick="openAuthAndShow('signup')">Sign Up</button>
+                    <button class="nav-action" id="adminBtn" onclick="openAuthAndShow('admin')">Admin</button>
+                </div>
+
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Features Page Content -->
+    <div class="page-content">
+        <div class="container">
+            <h1>Our Features</h1>
+            <div class="features-grid extended">
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🏫</div>
+                    <h3>For Teachers</h3>
+                    <ul class="feature-list">
+                        <li>Create and manage multiple exams</li>
+                        <li>Set custom time limits</li>
+                        <li>Question bank management</li>
+                        <li>Automatic grading</li>
+                        <li>Detailed result analytics</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🎓</div>
+                    <h3>For Students</h3>
+                    <ul class="feature-list">
+                        <li>Take exams from anywhere</li>
+                        <li>Instant results</li>
+                        <li>Progress tracking</li>
+                        <li>Performance analytics</li>
+                        <li>Practice tests</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Security</h3>
+                    <ul class="feature-list">
+                        <li>Secure authentication</li>
+                        <li>Anti-cheating measures</li>
+                        <li>Data encryption</li>
+                        <li>Safe data storage</li>
+                        <li>Regular backups</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics</h3>
+                    <ul class="feature-list">
+                        <li>Detailed performance reports</li>
+                        <li>Progress tracking</li>
+                        <li>Statistical analysis</li>
+                        <li>Comparative studies</li>
+                        <li>Export capabilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Online Exam System</h3>
+                <p>Manage exams, track progress, and stay secure.</p>
+            </div>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="features.html">Features</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-contact">
+                <a class="contact-link" href="mailto:support@example.com">support@example.com</a>
+                <a class="contact-link" href="tel:+8801307347646">+8801307347646</a>
+            </div>
+            <div class="footer-social">
+                <p class="follow">Follow us</p>
+                <div class="social-links">
+                    <a class="social-btn fb" href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+                    <a class="social-btn yt" href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; <span id="year"></span> Online Exam System. All rights reserved.</div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

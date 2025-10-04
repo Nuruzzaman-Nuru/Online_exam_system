@@ -4,227 +4,377 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .slide.active,
+        .slide:not(.hidden) {
+            opacity: 1;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <!-- Header with Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-content">
-            <div class="nav-left">
-                <a href="index.html" class="nav-logo">Online Exam System</a>
-            </div>
-            <div class="nav-right" id="navActions">
-                <div class="nav-links">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="about.html" class="nav-link">About</a>
-                    <a href="features.html" class="nav-link">Features</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-gray-800">Online Exam System</a>
                 </div>
-                <div class="nav-buttons">
-                    <button class="nav-btn combined" onclick="openAuthAndShow('login')">Login | Sign Up</button>
+                <div class="hidden sm:flex sm:items-center" id="navActions">
+                    <div class="flex space-x-4">
+                        <a href="index.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium active">Home</a>
+                        <a href="about.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="features.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Features</a>
+                        <a href="contact.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                    </div>
+                    <div class="ml-4">
+                        <button onclick="toggleAuth()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">Login | Sign Up</button>
+                    </div>
+                </div>
+                <button class="sm:hidden flex items-center text-gray-500 hover:text-gray-600" onclick="toggleMobileMenu()">☰</button>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="sm:hidden hidden" id="mobileMenu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">About</a>
+                    <a href="features.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
                 </div>
             </div>
-            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         </div>
     </nav>
 
-    <!-- Home Page Content -->
-    <div class="home-section" id="homeSection">
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden">
+        <div class="min-h-screen px-4 text-center">
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <!-- Auth Tabs -->
+                    <div class="flex border-b mb-4">
+                        <button onclick="showAuthTab('login')" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Login</button>
+                        <button onclick="showAuthTab('signup')" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Sign Up</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <div id="loginForm">
+                        <div class="space-y-4">
+                            <input type="text" id="loginUsername" placeholder="Username" class="w-full px-3 py-2 border rounded-lg">
+                            <input type="password" id="loginPassword" placeholder="Password" class="w-full px-3 py-2 border rounded-lg">
+                            <button onclick="handleLoginSubmit()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Sign Up Form -->
+                    <div id="signupForm" class="hidden space-y-4">
+                        <input type="text" id="signupName" placeholder="Full Name" class="w-full px-3 py-2 border rounded-lg">
+                        <input type="email" id="signupEmail" placeholder="Email" class="w-full px-3 py-2 border rounded-lg">
+                        <input type="password" id="signupPassword" placeholder="Password" class="w-full px-3 py-2 border rounded-lg">
+                        <button onclick="handleSignupSubmit()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Sign Up</button>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button onclick="toggleAuth()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
         <!-- Hero Section -->
-        <div class="hero">
-            <div class="hero-content">
-                <h1>Welcome to Online Exam System</h1>
-                <p>A modern platform for conducting online examinations with ease. Join us to experience seamless testing and evaluation.</p>
-                <div class="hero-buttons">
-                    <button class="btn primary" onclick="openAuthAndShow('signup')">Get Started</button>
-                    <button class="btn secondary" onclick="openAuthAndShow('login')">Login Now</button>
+        <section class="relative h-screen">
+            <!-- Background Images Slider -->
+            <div class="absolute inset-0">
+                <div class="slide active">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80" 
+                         alt="Online Exam 1" 
+                         class="w-full h-full object-cover"
+                    />
                 </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80" 
+                         alt="Online Exam 2" 
+                         class="w-full h-full object-cover"
+                    />
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&q=80" 
+                         alt="Online Exam 3" 
+                         class="w-full h-full object-cover"
+                    />
+                </div>
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+            <!-- Hero Content -->
+            <div class="relative z-10 h-full flex items-center justify-center">
+                <div class="max-w-6xl mx-auto px-4">
+                    <div class="text-center text-white mb-16">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Welcome to Online Exam System</h1>
+                        <p class="text-xl sm:text-2xl mb-8">A modern platform for conducting online examinations with ease.</p>
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
+                            <button onclick="toggleAuth(); showAuthTab('signup')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg text-lg transition duration-150 ease-in-out">Get Started</button>
+                            <button onclick="toggleAuth(); showAuthTab('login')" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-3 px-8 rounded-lg text-lg transition duration-150 ease-in-out">Login Now</button>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slider Navigation Dots -->
+            <div class="absolute bottom-8 left-0 right-0 flex justify-center space-x-4 z-10">
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity duration-300" data-slide="0"></button>
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity duration-300" data-slide="1"></button>
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity duration-300" data-slide="2"></button>
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity duration-300" data-slide="3"></button>
             </div>
         </div>
-
-        <!-- Features Section -->
-        <section class="features-section">
-            <div class="section-header">
-                <h2>Why Choose Us</h2>
-                <p>Discover the benefits of our online examination system</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h3>For Teachers</h3>
-                    <p>Create and manage exams easily. Set questions, time limits, and analyze results efficiently.</p>
-                    <ul class="feature-list">
-                        <li>Easy exam creation</li>
-                        <li>Automatic grading</li>
-                        <li>Result analytics</li>
-                    </ul>
+        <!-- Why Choose Us Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
+                    <p class="text-lg text-gray-600">Our platform offers comprehensive solutions for online examinations</p>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-graduate"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- For Teachers -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition duration-300 hover:shadow-xl">
+                        <div class="text-center">
+                            <div class="text-4xl text-blue-600 mb-4">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">For Teachers</h3>
+                            <p class="text-gray-600 mb-6">Create and manage exams easily</p>
+                            <ul class="text-left space-y-2 text-gray-600">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Easy exam creation
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Automatic grading
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Result analytics
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <h3>For Students</h3>
-                    <p>Take exams from anywhere, get instant results, and track your progress seamlessly.</p>
-                    <ul class="feature-list">
-                        <li>Remote access</li>
-                        <li>Instant results</li>
-                        <li>Progress tracking</li>
-                    </ul>
-                </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
+                    <!-- For Students -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition duration-300 hover:shadow-xl">
+                        <div class="text-center">
+                            <div class="text-4xl text-blue-600 mb-4">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">For Students</h3>
+                            <p class="text-gray-600 mb-6">Take exams from anywhere</p>
+                            <ul class="text-left space-y-2 text-gray-600">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Remote access
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Instant results
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Progress tracking
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <h3>Secure Platform</h3>
-                    <p>Advanced security measures to ensure exam integrity and data protection.</p>
-                    <ul class="feature-list">
-                        <li>Data encryption</li>
-                        <li>Safe authentication</li>
-                        <li>Anti-cheating system</li>
-                    </ul>
-                </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
+                    <!-- Secure Platform -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition duration-300 hover:shadow-xl">
+                        <div class="text-center">
+                            <div class="text-4xl text-blue-600 mb-4">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Secure Platform</h3>
+                            <p class="text-gray-600 mb-6">Advanced security measures</p>
+                            <ul class="text-left space-y-2 text-gray-600">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Data encryption
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Safe authentication
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Anti-cheating system
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <h3>Smart Analytics</h3>
-                    <p>Comprehensive analytics and reporting tools for better insights.</p>
-                    <ul class="feature-list">
-                        <li>Performance metrics</li>
-                        <li>Detailed reports</li>
-                        <li>Progress charts</li>
-                    </ul>
+
+                    <!-- Smart Analytics -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition duration-300 hover:shadow-xl">
+                        <div class="text-center">
+                            <div class="text-4xl text-blue-600 mb-4">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Smart Analytics</h3>
+                            <p class="text-gray-600 mb-6">Comprehensive analytics</p>
+                            <ul class="text-left space-y-2 text-gray-600">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Performance metrics
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Detailed reports
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Progress charts
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Statistics Section -->
-        <section class="stats-section">
-            <div class="stat-item">
-                <h3>1000+</h3>
-                <p>Active Users</p>
-            </div>
-            <div class="stat-item">
-                <h3>500+</h3>
-                <p>Exams Conducted</p>
-            </div>
-            <div class="stat-item">
-                <h3>98%</h3>
-                <p>Success Rate</p>
-            </div>
-            <div class="stat-item">
-                <h3>24/7</h3>
-                <p>Support Available</p>
-            </div>
-        </section>
+        <!-- Ready to Get Started Section -->
+        <section class="py-16 bg-blue-600 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-6">Ready to Get Started?</h2>
+                    <p class="text-xl mb-8">Join thousands of institutions already using our platform</p>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-4xl mx-auto mb-12">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold">1000+</div>
+                            <div class="text-sm opacity-80">Active Users</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold">500+</div>
+                            <div class="text-sm opacity-80">Exams Conducted</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold">98%</div>
+                            <div class="text-sm opacity-80">Success Rate</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold">24/7</div>
+                            <div class="text-sm opacity-80">Support</div>
+                        </div>
+                    </div>
 
-        <!-- Call to Action -->
-        <section class="cta-section">
-            <div class="cta-content">
-                <h2>Ready to Get Started?</h2>
-                <p>Join our platform today and experience the future of online examinations.</p>
-                <button class="btn primary" onclick="openAuthAndShow('signup')">Create Account</button>
-            </div>
-        </section>
-    </div>
-
-    <!-- Auth Section -->
-    <div class="auth-container" id="authContainer" style="display: none;">
-        <section id="authSection" class="auth-section">
-            <div class="auth-header">
-                <h1>Online Exam System</h1>
-            </div>
-            <div class="auth-tabs">
-                <button class="tab active" data-target="loginForm">Login</button>
-                <button class="tab" data-target="signupForm">Sign Up</button>
-                <button class="tab" data-target="adminForm">Admin</button>
-            </div>
-            <div class="auth-forms">
-                <div class="login-form auth-panel" id="loginForm">
-                    <h2>Login</h2>
-                    <form onsubmit="return handleLogin(event)">
-                        <input type="text" placeholder="Username" id="loginUsername" required>
-                        <input type="password" placeholder="Password" id="loginPassword" required>
-                        <button type="submit" class="btn primary">Login</button>
-                        <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
-                    </form>
-                </div>
-                <div class="signup-form auth-panel" id="signupForm" style="display: none;">
-                    <h2>Sign Up</h2>
-                    <form onsubmit="return handleSignup(event)">
-                        <input type="text" placeholder="Full Name" id="signupFullName" required>
-                        <input type="text" placeholder="Username" id="signupUsername" required>
-                        <input type="password" placeholder="Password" id="signupPassword" required>
-                        <input type="tel" placeholder="Mobile Number" id="signupMobile" pattern="[0-9]{11}" title="Please enter a valid 11-digit mobile number" required>
-                        <textarea id="signupAddress" placeholder="Full Address" required></textarea>
-                        <select id="role" required>
-                            <option value="student">Student</option>
-                            <option value="teacher">Teacher</option>
-                        </select>
-                        <button type="submit" class="btn primary">Sign Up</button>
-                        <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
-                    </form>
-                </div>
-
-                <div class="admin-form auth-panel" id="adminForm" style="display: none;">
-                    <h2>Admin Login</h2>
-                    <form onsubmit="return handleAdminLogin(event)">
-                        <input type="text" placeholder="Admin Username" id="adminUsername" required>
-                        <input type="password" placeholder="Admin Password" id="adminPassword" required>
-                        <button type="submit" class="btn primary">Admin Login</button>
-                        <button type="button" onclick="backToHome()" class="btn outline small">Back to Home</button>
-                    </form>
+                    <button onclick="toggleAuth(); showAuthTab('signup')" class="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg text-lg transition duration-150 ease-in-out">
+                        Get Started Now
+                    </button>
                 </div>
             </div>
         </section>
+    <section>
+      <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold">Online Exam System</h3>
+                    <p class="text-gray-400">Empowering education through technology and innovation.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
 
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="features.html" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
 
-    </div>
-  
-    <!-- Footer Section -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <h3>Online Exam System</h3>
-                <p>Making education assessment accessible and efficient</p>
-            </div>
-            
-            <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <a href="tel:+880123456789" class="contact-link">
-                    <i class="fas fa-phone"></i> +880 123 456 789
-                </a>
-                <a href="mailto:info@onlineexam.com" class="contact-link">
-                    <i class="fas fa-envelope"></i> info@onlineexam.com
-                </a>
-                <p class="contact-link">
-                    <i class="fas fa-location-dot"></i> Dhaka, Bangladesh
-                </p>
-            </div>
-            
-            <div class="footer-social">
-                <p class="follow">Follow Us</p>
-                <div class="social-links">
-                    <a href="#" class="social-btn fb">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-btn yt">
-                        <i class="fab fa-youtube"></i>
-                    </a>
+                <!-- Services -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Online Exams</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Result Management</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Performance Analytics</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Student Portal</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-map-marker-alt mt-1"></i>
+                            <span>123 Education Street, Academic City, 12345</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone"></i>
+                            <span>+1 234 567 8900</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@onlineexam.com</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Online Exam System. All rights reserved.</p>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-800 mt-8 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <p class="text-gray-400 text-sm">
+                        © 2025 Online Exam System. All rights reserved.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
+       </main>>
+    </section>
+      <script src="./js/auth.js"></script>
+    <script src="./js/questionManager.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 </html>
+               

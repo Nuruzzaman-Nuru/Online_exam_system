@@ -1,0 +1,24 @@
+.slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.active,
+.slide:not(.hidden) {
+    opacity: 1;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Smooth transitions for background images */
+.slide img {
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide.active img {
+    transform: scale(1.05);
+}

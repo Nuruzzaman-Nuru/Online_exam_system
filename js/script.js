@@ -201,14 +201,85 @@ function startSlideshow() {
     // Clear any existing interval
     if (slideInterval) clearInterval(slideInterval);
     
-    // Only start if there are slides
+    // Set initial state
     const slides = document.querySelectorAll('.slide');
     if (slides.length) {
+        // Show first slide
+        slides[0].style.opacity = '1';
+        
+        // Start automatic slideshow
+        let currentSlideIndex = 0;
         slideInterval = setInterval(() => {
-            showSlide(currentSlide + 1);
-        }, 4000);
+            // Hide current slide
+            slides[currentSlideIndex].style.opacity = '0';
+            
+            // Move to next slide
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            
+            // Show next slide
+            slides[currentSlideIndex].style.opacity = '1';
+            
+            // Update dots
+            const dots = document.querySelectorAll('.slider-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentSlideIndex) {
+                    dot.classList.add('opacity-100');
+                    dot.classList.remove('opacity-50');
+                } else {
+                    dot.classList.add('opacity-50');
+                    dot.classList.remove('opacity-100');
+                }
+            });
+        }, 5000); // Change slide every 5 seconds
     }
 }
+
+// Add event listeners for slider dots
+document.addEventListener('DOMContentLoaded', function() {
+    const dots = document.querySelectorAll('.slider-dot');
+    const slides = document.querySelectorAll('.slide');
+    
+    // Initialize first slide and dot
+    if (slides.length > 0) {
+        slides[0].style.opacity = '1';
+    }
+    if (dots.length > 0) {
+        dots[0].classList.add('opacity-100');
+        dots[0].classList.remove('opacity-50');
+    }
+    
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            // Clear existing interval
+            if (slideInterval) clearInterval(slideInterval);
+            
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.style.opacity = '0';
+            });
+            
+            // Show selected slide
+            slides[index].style.opacity = '1';
+            
+            // Update dots
+            dots.forEach((d, i) => {
+                if (i === index) {
+                    d.classList.add('opacity-100');
+                    d.classList.remove('opacity-50');
+                } else {
+                    d.classList.add('opacity-50');
+                    d.classList.remove('opacity-100');
+                }
+            });
+            
+            // Restart slideshow
+            startSlideshow();
+        });
+    });
+    
+    // Start the slideshow
+    startSlideshow();
+});
 
 // Load common footer
 async function loadFooter() {

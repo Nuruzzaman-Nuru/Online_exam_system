@@ -1,20 +1,44 @@
-git <!-- Header with Navigation Bar -->
-<nav class="navbar">
-    <div class="nav-content">
-        <div class="nav-left">
-            <a href="index.html" class="nav-logo">Online Exam System</a>
-        </div>
-        <div class="nav-right" id="navActions">
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="features.html" class="nav-link">Features</a>
-                <a href="contact.html" class="nav-link">Contact</a>
+<!-- Header with Navigation Bar -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-gray-800">Online Exam System</a>
+                </div>
+                <div class="hidden sm:flex sm:items-center" id="navActions">
+                    <div class="flex space-x-4">
+                        <a href="index.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium active">Home</a>
+                        <a href="about.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="features.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Features</a>
+                        <a href="contact.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                    </div>
+                    <div class="ml-4" id="authButtons">
+                        <button onclick="toggleAuth(); showAuthTab('login')" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">Login | Sign Up</button>
+                        <button onclick="handleLogout()" class="hidden bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out ml-2">Logout</button>
+                    </div>
+                </div>
+                <button class="sm:hidden flex items-center text-gray-500 hover:text-gray-600" onclick="toggleMenu()">☰</button>
             </div>
-            <div class="nav-buttons">
-                <button class="nav-btn combined" onclick="openAuthAndShow('login')">Login | Sign Up</button>
+            <!-- Mobile Menu -->
+            <div class="sm:hidden hidden" id="mobileMenu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">About</a>
+                    <a href="features.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                </div>
             </div>
         </div>
-        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-    </div>
-</nav>
+    </nav>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden">
+        <div class="min-h-screen px-4 text-center">
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <!-- Auth Tabs -->
+                    <div class="flex border-b mb-4">
+                        <button onclick="showAuthTab('login')" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Teacher/Student Login</button>
+                        <button onclick="showAuthTab('signup')" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Sign Up</button>
+                    </div>
+                    

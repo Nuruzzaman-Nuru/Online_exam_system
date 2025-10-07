@@ -283,12 +283,62 @@ function handleSignup() {
             address: ''
         };
 
-        auth.signup(userData);
-        alert('Account created successfully! You can now login.');
-        showAuthTab('login');
+        const newUser = auth.signup(userData);
+
+        // Show credentials in a popup
+        const credentialsHtml = `
+            <div class="credentials-popup">
+                <h3>✅ Account Created Successfully!</h3>
+                <div class="credentials-box">
+                    <p class="mb-3"><strong>Your Login Credentials:</strong></p>
+                    <div class="credential-item">
+                        <span>Username:</span>
+                        <code>${email}</code>
+                        <button class="copy-btn" onclick="copyToClipboard('${email}')">Copy</button>
+                    </div>
+                    <div class="credential-item">
+                        <span>Password:</span>
+                        <code>${password}</code>
+                        <button class="copy-btn" onclick="copyToClipboard('${password}')">Copy</button>
+                    </div>
+                </div>
+                <p class="save-note">Please save these credentials securely!</p>
+                <button onclick="closeCredentialsAndLogin()" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 w-full">
+                    Got it! Let me login
+                </button>
+            </div>
+        `;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.innerHTML = credentialsHtml;
+        document.body.appendChild(overlay);
+
     } catch (error) {
         alert(error.message);
     }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            // Show a brief success message near the button
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = originalText, 1500);
+        })
+        .catch(() => alert('Failed to copy text'));
+}
+
+function closeCredentialsAndLogin() {
+    // Remove the credentials overlay
+    const overlay = document.querySelector('.overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+    // Switch to login tab
+    showAuthTab('login');
 }
 
 function handleLogout() {

@@ -1,0 +1,216 @@
+/* Main styles from original CSS */
+.slide.active img {
+    transform: scale(1.05);
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.active,
+.slide:not(.hidden) {
+    opacity: 1;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Auth tab hover styles */
+.auth-tabs button {
+    position: relative;
+    transition: all 0.3s ease;
+    border-bottom: none !important;
+}
+
+.auth-tabs button:hover {
+    background-color: #f0f7ff;
+    color: #2563eb !important;
+}
+
+.auth-tabs button.active {
+    background-color: #f0f7ff;
+    color: #2563eb !important;
+    border-bottom: none !important;
+}
+
+/* Credentials popup styles */
+.credentials-popup {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    margin: 2rem auto;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.credentials-popup h3 {
+    color: #16a34a;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.credentials-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.credential-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
+
+.credential-item code {
+    font-family: monospace;
+    background: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin: 0 0.5rem;
+    flex: 1;
+    text-align: center;
+}
+
+.copy-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.copy-btn:hover {
+    background: #2563eb;
+}
+
+.save-note {
+    color: #dc2626;
+    text-align: center;
+    margin: 1rem 0;
+    font-weight: 500;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Password toggle button */
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 4px;
+}
+
+.password-toggle:hover {
+    color: #4b5563;
+}
+
+.password-field-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.password-field-wrapper input {
+    padding-right: 30px;
+    border: none;
+    outline: none;
+}
+
+/* Admin dashboard specific styles */
+.admin-dashboard .stats-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard .user-table {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard .user-table th {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+.admin-dashboard .user-table td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.admin-dashboard .action-btn {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-dashboard .action-btn.edit {
+    color: #3b82f6;
+}
+
+.admin-dashboard .action-btn.delete {
+    color: #dc2626;
+}
+
+.admin-dashboard .action-btn:hover {
+    opacity: 0.8;
+}

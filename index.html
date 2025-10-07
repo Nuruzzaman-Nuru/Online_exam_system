@@ -5,25 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Exam System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .slide {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-        
-        .slide.active,
-        .slide:not(.hidden) {
-            opacity: 1;
-        }
-        
-        .hidden {
-            display: none;
-        }
-    </style>
+   
 </head>
 <body>
     <!-- Header with Navigation Bar -->
@@ -41,6 +26,7 @@
                         <a href="contact.html" class="text-white-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
                     </div>
                     <div class="ml-4" id="authButtons">
+             
                         <button onclick="toggleAuth(); showAuthTab('login')" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">Login | Sign Up</button>
                         <button onclick="handleLogout()" class="hidden bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out ml-2">Logout</button>
                     </div>
@@ -65,16 +51,16 @@
             <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <!-- Auth Tabs -->
-                    <div class="flex border-b mb-4">
-                        <button onclick="showAuthTab('login')" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Teacher/Student Login</button>
-                        <button onclick="showAuthTab('signup')" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Sign Up</button>
+                    <div class="flex mb-4 auth-tabs rounded-t-lg overflow-hidden">
+                        <button onclick="showAuthTab('login')" class="px-6 py-3 text-sm font-medium text-gray-600 flex-1 active">Teacher/Student Login</button>
+                        <button onclick="showAuthTab('signup')" class="px-6 py-3 text-sm font-medium text-gray-600 flex-1">Sign Up</button>
                     </div>
                     
                     <!-- Teacher/Student Login Form -->
                     <form id="loginForm" onsubmit="event.preventDefault(); handleLoginSubmit();">
                         <div class="space-y-4">
                             <div class="text-center mb-4">
-                                <h3 class="text-lg font-medium text-gray-900">Teacher/Student/admin Login</h3>
+                                <h3 class="text-lg 	 text-blue-900 font-medium ">Teacher/Student/admin Login</h3>
                             </div>
                             User Name:<input type="text" id="loginUsername" placeholder="Username/Email" class="w-full px-3 py-2 border rounded-lg" required>
                              Password:<input type="password" id="loginPassword" placeholder="Password" class="w-full px-3 py-2 border rounded-lg" required>
@@ -87,7 +73,7 @@
                     <form id="adminLoginForm" class="hidden space-y-4" onsubmit="event.preventDefault(); handleAdminLogin();">
                         <div class="space-y-4">
                             <div class="text-center mb-4">
-                                <h3 class="text-lg font-medium text-gray-900">Admin Login</h3>
+                                <h3 class="text-lg  text-blue-900 font-medium text-gray-900">Admin Login</h3>
                             </div>
                             <input type="text" id="adminUsername" placeholder="Admin Username" class="w-full px-3 py-2 border rounded-lg" required>
                             <input type="password" id="adminPassword" placeholder="Admin Password" class="w-full px-3 py-2 border rounded-lg" required>

@@ -1,342 +1,326 @@
-// Authentication Functions
+// Authentication System
 
-// Show/Hide Auth Modal
+class Auth {
+    constructor() {
+        this.users = JSON.parse(localStorage.getItem('users')) || [];
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        this.ADMIN_CODE = 'ADMIN123'; // In a real app, this would be server-side
+
+        // Create default admin if none exists
+        if (!this.users.find(u => u.role === 'admin')) {
+            this.users.push({
+                id: 'admin-' + Date.now(),
+                username: 'admin',
+                password: 'admin123', // In a real app, this would be hashed
+                role: 'admin',
+                fullName: 'System Admin',
+                email: 'admin@system.com',
+                active: true
+            });
+            this.saveUsers();
+        }
+    }
+
+    saveUsers() {
+        localStorage.setItem('users', JSON.stringify(this.users));
+    }
+
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    signup(userData) {
+        // Validate required fields
+        if (!userData.username || !userData.password || !userData.fullName || !userData.email) {
+            throw new Error('All required fields must be filled');
+        }
+
+        // Check if username already exists
+        if (this.users.find(u => u.username === userData.username)) {
+            throw new Error('Username already exists');
+        }
+
+        // Create new user object
+        const newUser = {
+            id: this.generateId(),
+            username: userData.username,
+            password: userData.password, // In a real app, this would be hashed
+            fullName: userData.fullName,
+            email: userData.email,
+            role: userData.role || 'student',
+            mobile: userData.mobile || '',
+            address: userData.address || '',
+            active: true,
+            createdAt: new Date().toISOString()
+        };
+
+        // Add to users array and save
+        this.users.push(newUser);
+        this.saveUsers();
+
+        return newUser;
+    }
+
+    login(username, password, adminCode = '') {
+        // Find user
+        const user = this.users.find(u => u.username === username);
+        
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Check password
+        if (user.password !== password) { // In a real app, would use proper password comparison
+            throw new Error('Invalid password');
+        }
+
+        // Check if user is active
+        if (!user.active) {
+            throw new Error('Account is inactive. Please contact administrator.');
+        }
+
+        // For admin login, verify admin code
+        if (user.role === 'admin' && adminCode !== this.ADMIN_CODE) {
+            throw new Error('Invalid admin access code');
+        }
+
+        // Set current user
+        this.currentUser = {
+            id: user.id,
+            username: user.username,
+            fullName: user.fullName,
+            role: user.role,
+            email: user.email
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        return this.currentUser;
+    }
+
+    logout() {
+        this.currentUser = null;
+        localStorage.removeItem('currentUser');
+    }
+
+    getCurrentUser() {
+        return this.currentUser;
+    }
+
+    isLoggedIn() {
+        return this.currentUser !== null;
+    }
+
+    isAdmin() {
+        return this.currentUser?.role === 'admin';
+    }
+
+    isTeacher() {
+        return this.currentUser?.role === 'teacher';
+    }
+
+    isStudent() {
+        return this.currentUser?.role === 'student';
+    }
+
+    updateUser(userId, updates) {
+        const userIndex = this.users.findIndex(u => u.id === userId);
+        if (userIndex === -1) throw new Error('User not found');
+
+        // Don't allow updating critical fields directly
+        delete updates.id;
+        delete updates.createdAt;
+
+        this.users[userIndex] = { ...this.users[userIndex], ...updates };
+        this.saveUsers();
+
+        // If updating current user, refresh currentUser
+        if (this.currentUser && this.currentUser.id === userId) {
+            this.currentUser = {
+                id: this.users[userIndex].id,
+                username: this.users[userIndex].username,
+                fullName: this.users[userIndex].fullName,
+                role: this.users[userIndex].role,
+                email: this.users[userIndex].email
+            };
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        }
+
+        return this.users[userIndex];
+    }
+
+    deleteUser(userId) {
+        const userIndex = this.users.findIndex(u => u.id === userId);
+        if (userIndex === -1) throw new Error('User not found');
+
+        // Don't allow deleting the last admin
+        if (this.users[userIndex].role === 'admin' && 
+            this.users.filter(u => u.role === 'admin').length === 1) {
+            throw new Error('Cannot delete the last admin user');
+        }
+
+        this.users.splice(userIndex, 1);
+        this.saveUsers();
+    }
+
+    getUsers() {
+        return this.users.map(u => ({
+            ...u,
+            password: undefined // Don't expose passwords
+        }));
+    }
+}
+
+// Initialize auth instance
+const auth = new Auth();
+
+// UI Functions
 function toggleAuth() {
     const authModal = document.getElementById('authModal');
     authModal.classList.toggle('hidden');
 }
 
-// Show different auth tabs
 function showAuthTab(tab) {
-    // Hide all forms first
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('adminLoginForm').classList.add('hidden');
-    document.getElementById('signupForm').classList.add('hidden');
-
-    // Show the selected form
-    if (tab === 'login') {
-        document.getElementById('loginForm').classList.remove('hidden');
-    } else if (tab === 'admin-login') {
-        document.getElementById('adminLoginForm').classList.remove('hidden');
-    } else if (tab === 'signup') {
-        document.getElementById('signupForm').classList.remove('hidden');
-    }
-
-    // Update tab styles
-    const allTabs = document.querySelectorAll('button[onclick^="showAuthTab"]');
-    allTabs.forEach(t => {
-        t.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
-        t.classList.add('text-gray-500', 'hover:text-gray-700');
+    // Hide all forms
+    document.querySelectorAll('#loginForm, #adminLoginForm, #signupForm').forEach(form => {
+        form.classList.add('hidden');
     });
-    
-    // Highlight active tab
-    const activeTab = document.querySelector(`button[onclick="showAuthTab('${tab}')"]`);
-    if (activeTab) {
-        activeTab.classList.remove('text-gray-500', 'hover:text-gray-700');
-        activeTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+
+    // Show selected form
+    const formId = tab === 'admin-login' ? 'adminLoginForm' : `${tab}Form`;
+    const selectedForm = document.getElementById(formId);
+    if (selectedForm) {
+        selectedForm.classList.remove('hidden');
     }
+
+    // Update tab styling
+    document.querySelectorAll('.auth-tabs button').forEach(button => {
+        if (button.textContent.toLowerCase().includes(tab)) {
+            button.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            button.classList.remove('text-gray-500');
+        } else {
+            button.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+            button.classList.add('text-gray-500');
+        }
+    });
 }
 
-// Handle Login Form Submission
 function handleLoginSubmit() {
-    const username = document.getElementById('loginUsername').value;
+    const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
 
-    // Add validation
+    // Validate inputs
     if (!username || !password) {
-        alert('Please fill in all fields');
+        alert('Please enter both username and password');
         return;
     }
 
-    // Get stored user data
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    
-    if (!userData) {
-        alert('User not found. Please sign up first.');
-        return;
-    }
+    try {
+        const user = auth.login(username, password);
+        toggleAuth(); // Close the modal
 
-    // Simple password check (in real app, this would be done server-side)
-    if (userData.email === username && userData.password === password) {
         // Redirect based on user role
-        if (userData.userRole === 'student') {
-            window.location.href = 'student-dashboard.html';
-        } else if (userData.userRole === 'teacher') {
+        if (user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        } else if (user.role === 'teacher') {
             window.location.href = 'teacher-dashboard.html';
+        } else {
+            window.location.href = 'student-dashboard.html';
         }
-        toggleAuth();
-    } else {
-        alert('Invalid credentials');
+    } catch (error) {
+        alert(error.message);
     }
 }
 
-// Handle Admin Login
 function handleAdminLogin() {
-    const username = document.getElementById('adminUsername').value;
+    const username = document.getElementById('adminUsername').value.trim();
     const password = document.getElementById('adminPassword').value;
-    const adminCode = document.getElementById('adminCode').value;
+    const adminCode = document.getElementById('adminCode').value.trim();
 
-    // Add validation
+    // Validate inputs
     if (!username || !password || !adminCode) {
         alert('Please fill in all fields');
         return;
     }
 
-    // In a real application, these would be verified against a server
-    const ADMIN_CODE = 'ADMIN123'; // This would normally be stored securely on a server
-    
-    if (adminCode !== ADMIN_CODE) {
-        alert('Invalid admin access code');
-        return;
-    }
-
-    // Verify admin credentials (in real app, this would be done server-side)
-    const adminUser = {
-        username: 'admin',
-        password: 'admin123'
-    };
-
-    if (username === adminUser.username && password === adminUser.password) {
-        // Store admin session
-        localStorage.setItem('adminSession', JSON.stringify({
-            isAdmin: true,
-            username: username,
-            loginTime: new Date().toISOString()
-        }));
-        
-        // Redirect to admin dashboard
-        window.location.href = 'admin-dashboard.html';
-        toggleAuth();
-    } else {
-        alert('Invalid admin credentials');
-    }
-}
-
-// Handle Signup
-function handleSignup() {
-    const name = document.getElementById('signupName').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const userRole = document.getElementById('userRole').value;
-
-    // Add validation
-    if (!name || !email || !password || !userRole) {
-        alert('Please fill in all fields and select a role');
-        return;
-    }
-
-    // Create signup data object
-    const signupData = {
-        name: name,
-        email: email,
-        password: password,
-        userRole: userRole
-    };
-
-    // Store user data (in real application, this would be sent to a server)
-    localStorage.setItem('userData', JSON.stringify(signupData));
-
-    // Show success message
-    alert('Signup successful! Please login.');
-
-    // Switch to login tab
-    showAuthTab('login');
-}
-
-// Show different auth tabs
-function showAuthTab(tab) {
-    // Hide all forms first
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('adminLoginForm').classList.add('hidden');
-    document.getElementById('signupForm').classList.add('hidden');
-
-    // Show the selected form
-    if (tab === 'login') {
-        document.getElementById('loginForm').classList.remove('hidden');
-    } else if (tab === 'admin-login') {
-        document.getElementById('adminLoginForm').classList.remove('hidden');
-    } else if (tab === 'signup') {
-        document.getElementById('signupForm').classList.remove('hidden');
-    }
-
-    // Update tab styles
-    const allTabs = document.querySelectorAll('button[onclick^="showAuthTab"]');
-    allTabs.forEach(t => {
-        t.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
-        t.classList.add('text-gray-500', 'hover:text-gray-700');
-    });
-    
-    // Highlight active tab
-    const activeTab = document.querySelector(`button[onclick="showAuthTab('${tab}')"]`);
-    if (activeTab) {
-        activeTab.classList.remove('text-gray-500', 'hover:text-gray-700');
-        activeTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
-    }
-}
-
-// Handle Regular Login Form Submission
-function handleLoginSubmit() {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-
-    // Add validation
-    if (!username || !password) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    // Get stored user data
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    
-    if (!userData) {
-        alert('User not found. Please sign up first.');
-        return;
-    }
-
-    // Simple password check (in real app, this would be done server-side)
-    if (userData.email === username && userData.password === password) {
-        // Redirect based on user role
-        if (userData.userRole === 'student') {
-            window.location.href = 'student-dashboard.html';
-        } else if (userData.userRole === 'teacher') {
-            window.location.href = 'teacher-dashboard.html';
+    try {
+        const user = auth.login(username, password, adminCode);
+        if (user.role !== 'admin') {
+            throw new Error('Access denied: Not an admin account');
         }
-        toggleAuth();
-    } else {
-        alert('Invalid credentials');
-    }
-}
-
-// Handle Admin Login Form Submission
-function handleAdminLogin() {
-    const username = document.getElementById('adminUsername').value;
-    const password = document.getElementById('adminPassword').value;
-    const adminCode = document.getElementById('adminCode').value;
-
-    // Add validation
-    if (!username || !password || !adminCode) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    // In a real application, these would be verified against a server
-    // This is just for demonstration purposes
-    const ADMIN_CODE = 'ADMIN123'; // This would normally be stored securely on a server
-    
-    if (adminCode !== ADMIN_CODE) {
-        alert('Invalid admin access code');
-        return;
-    }
-
-    // Verify admin credentials (in real app, this would be done server-side)
-    const adminUser = {
-        username: 'admin',
-        password: 'admin123'
-    };
-
-    if (username === adminUser.username && password === adminUser.password) {
-        // Store admin session
-        localStorage.setItem('adminSession', JSON.stringify({
-            isAdmin: true,
-            username: username,
-            loginTime: new Date().toISOString()
-        }));
-        
-        // Redirect to admin dashboard
+        toggleAuth(); // Close the modal
         window.location.href = 'admin-dashboard.html';
-        toggleAuth();
-    } else {
-        alert('Invalid admin credentials');
+    } catch (error) {
+        alert(error.message);
     }
 }
 
-// Level configurations
-const levelConfig = {
-    student: [
-        "Primary Level",
-        "Secondary Level",
-        "Higher Secondary",
-        "Undergraduate",
-        "Graduate",
-        "Post Graduate"
-    ],
-    teacher: [
-        "Primary Teacher",
-        "Secondary Teacher",
-        "Higher Secondary Teacher",
-        "University Lecturer",
-        "Assistant Professor",
-        "Associate Professor",
-        "Professor"
-    ]
-};
-
-// Update level options based on selected role
-function updateLevelOptions() {
-    const roleSelect = document.getElementById('userRole');
-    const levelSelect = document.getElementById('userLevel');
-    const selectedRole = roleSelect.value;
-
-    // Clear existing options
-    levelSelect.innerHTML = '<option value="">Choose your level</option>';
-
-    // Add new options based on selected role
-    if (selectedRole && levelConfig[selectedRole]) {
-        levelConfig[selectedRole].forEach(level => {
-            const option = document.createElement('option');
-            option.value = level;
-            option.textContent = level;
-            levelSelect.appendChild(option);
-        });
-    }
-}
-
-// Handle Signup
 function handleSignup() {
-    const name = document.getElementById('signupName').value;
-    const email = document.getElementById('signupEmail').value;
+    const fullName = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
-    const userRole = document.getElementById('userRole').value;
-    const userLevel = document.getElementById('userLevel').value;
+    const role = document.getElementById('userRole').value;
 
-    // Add validation
-    if (!name || !email || !password || !userRole || !userLevel) {
-        alert('Please fill in all fields and select both role and level');
+    // Validate inputs
+    if (!fullName || !email || !password || !role) {
+        alert('Please fill in all required fields');
         return;
     }
 
-    // Create signup data object
-    const signupData = {
-        name: name,
-        email: email,
-        password: password,
-        userRole: userRole,
-        userLevel: userLevel
-    };
+    // Basic email validation
+    if (!email.includes('@') || !email.includes('.')) {
+        alert('Please enter a valid email address');
+        return;
+    }
 
-    // Store user data (in real application, this would be sent to a server)
-    localStorage.setItem('userData', JSON.stringify(signupData));
+    try {
+        const userData = {
+            fullName,
+            username: email,
+            email,
+            password,
+            role,
+            mobile: '',
+            address: ''
+        };
 
-    // Show success message
-    alert('Signup successful! Please login.');
-
-    // Switch to login tab
-    showAuthTab('login');
+        auth.signup(userData);
+        alert('Account created successfully! You can now login.');
+        showAuthTab('login');
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
-// Handle Logout
 function handleLogout() {
-    // Clear stored data
-    localStorage.removeItem('userData');
-    localStorage.removeItem('adminData');
-    localStorage.removeItem('userType');
-
-    // Redirect to home page
+    auth.logout();
     window.location.href = 'index.html';
 }
 
-// Add event listener for mobile menu toggle
-function toggleMenu() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenu.classList.toggle('hidden');
-}
+// Initialize auth state on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const currentUser = auth.getCurrentUser();
+    const authButtons = document.getElementById('authButtons');
+    
+    if (currentUser) {
+        // User is logged in
+        if (currentUser.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        } else if (currentUser.role === 'teacher') {
+            window.location.href = 'teacher-dashboard.html';
+        } else if (currentUser.role === 'student') {
+            window.location.href = 'student-dashboard.html';
+        }
+        
+        // Show logout button, hide login button
+        if (authButtons) {
+            authButtons.querySelector('button:first-child').classList.add('hidden');
+            authButtons.querySelector('button:last-child').classList.remove('hidden');
+        }
+    } else {
+        // User is not logged in
+        if (authButtons) {
+            authButtons.querySelector('button:first-child').classList.remove('hidden');
+            authButtons.querySelector('button:last-child').classList.add('hidden');
+        }
+    }
+});

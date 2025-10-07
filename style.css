@@ -1,24 +1,37 @@
-.slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.slide.active,
-.slide:not(.hidden) {
-    opacity: 1;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Smooth transitions for background images */
-.slide img {
-    transition: transform 0.5s ease-in-out;
-}
 
 .slide.active img {
     transform: scale(1.05);
 }
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .slide.active,
+        .slide:not(.hidden) {
+            opacity: 1;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        /* Auth tab hover styles */
+        .auth-tabs button {
+            position: relative;
+            transition: all 0.3s ease;
+            border-bottom: none !important;
+        }
+
+        .auth-tabs button:hover {
+            background-color: #f0f7ff;
+            color: #2563eb !important;
+        }
+
+        .auth-tabs button.active {
+            background-color: #f0f7ff;
+            color: #2563eb !important;
+            border-bottom: none !important;
+        }

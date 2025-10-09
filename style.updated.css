@@ -214,3 +214,29 @@
 .admin-dashboard .action-btn:hover {
     opacity: 0.8;
 }
+
+/* Header / Navigation styles */
+.nav-content { position: relative; }
+nav a.nav-link {
+    color: #1f2937; /* gray-800 */
+    text-decoration: none;
+}
+.nav-link.active {
+    color: #1d4ed8; /* blue-700 */
+    font-weight: 600;
+}
+
+/* Mobile toggle: when .show is present, reveal the center links */
+#navCenter { display: flex; }
+#navCenter.show { display: block; }
+
+/* Small screens: hide the center on small view until toggled */
+@media (max-width: 640px) {
+    #navCenter { display: none; flex-direction: column; gap: 0.5rem; }
+    #navCenter.show { display: flex; }
+    #navActions { display: flex; align-items: center; gap: 0.75rem; }
+    nav { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+}
+
+/* Give body content room for the fixed nav */
+body { padding-top: 4rem; }

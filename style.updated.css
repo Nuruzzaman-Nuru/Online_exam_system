@@ -226,6 +226,13 @@ nav a.nav-link {
     font-weight: 600;
 }
 
+/* Home page (transparent) nav overrides */
+.home-nav { background: transparent; box-shadow: none; }
+.home-nav .nav-link { color: #ffffff; }
+.home-nav .nav-link:hover { background-color: rgba(255,255,255,0.08); }
+.home-nav .menu-toggle { color: #ffffff; }
+.home-nav .ml-4 button { border: 1px solid rgba(255,255,255,0.12); }
+
 /* Mobile toggle: when .show is present, reveal the center links */
 #navCenter { display: flex; }
 #navCenter.show { display: block; }

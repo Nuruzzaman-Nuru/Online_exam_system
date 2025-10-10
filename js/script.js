@@ -338,6 +338,12 @@ function startSlideshow() {
     // Set initial state
     const slides = document.querySelectorAll('.slide');
     if (slides.length) {
+        // Initialize all slides with transition
+        slides.forEach(slide => {
+            slide.style.transition = 'opacity 1s ease-in-out';
+            slide.style.opacity = '0';
+        });
+        
         // Show first slide
         slides[0].style.opacity = '1';
         
@@ -353,7 +359,7 @@ function startSlideshow() {
             // Show next slide
             slides[currentSlideIndex].style.opacity = '1';
             
-            // Update dots
+            // Update dots if they exist
             const dots = document.querySelectorAll('.slider-dot');
             dots.forEach((dot, index) => {
                 if (index === currentSlideIndex) {
@@ -364,7 +370,7 @@ function startSlideshow() {
                     dot.classList.remove('opacity-100');
                 }
             });
-        }, 5000); // Change slide every 5 seconds
+        }, 4000); // Change slide every 4 seconds
     }
 }
 

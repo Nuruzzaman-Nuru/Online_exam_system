@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style.updated.css">
     <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/hero.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
    
@@ -105,17 +106,17 @@
                          class="w-full h-full object-cover"
                     />
                 </div>
-                <div class="absolute inset-0 bg-black/50"></div>
+                <div class="absolute inset-0" style="background: rgba(0, 0, 0, 0.6)"></div>
             </div>
             <!-- Hero Content -->
             <div class="relative z-10 h-full flex items-center justify-center">
                 <div class="max-w-6xl mx-auto px-4">
                     <div class="text-center text-white mb-16">
                         <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Welcome to Online Exam System</h1>
-                        <p class="text-xl sm:text-2xl mb-8">A modern platform for conducting online examinations with ease.</p>
+                        <p class="text-xl sm:text-2xl mb-8 text-gray-100">A modern platform for conducting online examinations with ease.</p>
                         <div class="flex flex-col sm:flex-row justify-center gap-4">
-                            <button onclick="toggleAuth(); showAuthTab('signup')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg text-lg transition duration-150 ease-in-out">Get Started</button>
-                            <button onclick="toggleAuth(); showAuthTab('login')" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-3 px-8 rounded-lg text-lg transition duration-150 ease-in-out">Login Now</button>
+                            <button onclick="toggleAuth(); showAuthTab('signup')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded text-lg transition duration-150 ease-in-out shadow-lg hover:shadow-xl">Get Started</button>
+                            <button onclick="toggleAuth(); showAuthTab('login')" class="bg-white hover:bg-gray-50 text-blue-600 font-semibold py-3 px-8 rounded text-lg transition duration-150 ease-in-out shadow-lg hover:shadow-xl">Login Now</button>
                         </div>
                     </div>
                         </div>

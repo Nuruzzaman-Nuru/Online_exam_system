@@ -1,35 +1,56 @@
- <!-- Header with Navigation Bar -->
-    <nav class="bg-white shadow-md fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 nav-content">
-            <div class="flex justify-between h-16">
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="index.html" class="text-xl font-bold text-gray-800">Online Exam System</a>
-                </div>
-                <div class="hidden sm:flex sm:items-center" id="navActions">
-                    <div id="navCenter" class="flex space-x-4">
-                        <a href="index.html" class="nav-link text-gray-900 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium active">Home</a>
-                        <a href="about.html" class="nav-link text-gray-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">About</a>
-                        <a href="features.html" class="nav-link text-gray-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Features</a>
-                        <a href="contact.html" class="nav-link text-gray-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
-                    </div>
-                    <div class="ml-4" id="authButtons">
-                        <button onclick="toggleAuth(); showAuthTab('login')" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">Login | Sign Up</button>
-                        <button onclick="handleLogout()" class="hidden bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out ml-2">Logout</button>
-                    </div>
-                </div>
-                <button class="sm:hidden flex items-center text-gray-500 hover:text-gray-600 menu-toggle" onclick="toggleMenu()">☰</button>
+<!-- Header with Navigation Bar -->
+<nav class="w-full home-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="nav-content flex justify-between">
+            <div class="flex-shrink-0 flex items-center">
+                <a href="index.html" class="brand-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Online Exam System
+                </a>
             </div>
-            <!-- Mobile Menu -->
-            <div class="sm:hidden hidden" id="mobileMenu">
-                <div class="px-2 pt-2 pb-3 space-y-1">
-                    <a href="index.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                    <a href="about.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">About</a>
-                    <a href="features.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Features</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            <div class="hidden sm:flex sm:items-center space-x-8" id="navActions">
+                <div id="navCenter" class="flex space-x-2">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="features.html" class="nav-link">Features</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                <div id="authButtons" class="flex items-center space-x-4">
+                    <button onclick="toggleAuth(); showAuthTab('login')" class="student-key-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                        </svg>
+                        Student Login
+                    </button>
+                    <button onclick="toggleAuth(); showAuthTab('signup')" class="signup-btn">Sign Up</button>
+                    <button onclick="handleLogout()" class="hidden teacher-signin-btn">Logout</button>
+                </div>
+            </div>
+            <button class="sm:hidden flex items-center menu-toggle" onclick="toggleMenu()">☰</button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="sm:hidden hidden" id="mobileMenu">
+            <div class="space-y-1">
+                <a href="index.html" class="block">Home</a>
+                <a href="about.html" class="block">About</a>
+                <a href="features.html" class="block">Features</a>
+                <a href="contact.html" class="block">Contact</a>
+                <div class="mt-4">
+                    <button onclick="toggleAuth(); showAuthTab('login')" class="student-key-btn w-full justify-center mb-2">Student Login</button>
+                    <button onclick="toggleAuth(); showAuthTab('signup')" class="signup-btn w-full justify-center">Sign Up</button>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+    <!-- Wave Decoration -->
+    <div class="wave-divider">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
+</nav>
 
     <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden">

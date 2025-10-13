@@ -1,15 +1,97 @@
-/* Page sections background colors */
+/* Common page styles */
+.page-container {
+    padding-top: 4rem;
+}
+
+.page-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #1f2937;
+    margin-bottom: 3rem;
+}
+
+/* Grid layouts */
+.grid-container {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.grid-2-cols {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-4-cols {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Card styles */
+.card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Features page specific */
+.features-section {
+    background-color: #f0fdf4;
+}
+
+.feature-card {
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #4b5563;
+}
+
+.feature-list li i {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #2563eb;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* About page specific */
 .about-section {
     background-color: #f8fafc;
-}
-
-.about-card {
-    background: white;
-    transition: transform 0.3s ease;
-}
-
-.about-card:hover {
-    transform: translateY(-5px);
 }
 
 .mission-section {
@@ -20,36 +102,135 @@
     background-color: #f0f7ff;
 }
 
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Contact page specific */
 .contact-section {
     background: linear-gradient(to bottom, #f8fafc, #eff6ff);
 }
 
-.contact-card {
-    background: white;
+.contact-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contact-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #e0f2fe;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    color: #2563eb;
+}
+
+.contact-text span {
+    display: block;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.contact-text a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.contact-text a:hover {
+    color: #1d4ed8;
+}
+
+/* Form styles */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
     transition: all 0.3s ease;
 }
 
-.contact-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+.form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.features-section {
-    background-color: #f0fdf4;
+textarea.form-input {
+    min-height: 120px;
+    resize: vertical;
 }
 
-.feature-card {
-    background: white;
-    border-radius: 1rem;
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
 }
 
-/* Common section spacing */
-.page-section {
-    padding: 4rem 0;
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .grid-4-cols {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-2-cols {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-4-cols {
+        grid-template-columns: 1fr;
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-content {
+        padding: 2rem 1rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
 }

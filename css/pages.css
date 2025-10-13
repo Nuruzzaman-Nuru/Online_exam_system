@@ -1,0 +1,55 @@
+/* Page sections background colors */
+.about-section {
+    background-color: #f8fafc;
+}
+
+.about-card {
+    background: white;
+    transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+}
+
+.mission-section {
+    background-color: #eff6ff;
+}
+
+.values-section {
+    background-color: #f0f7ff;
+}
+
+.contact-section {
+    background: linear-gradient(to bottom, #f8fafc, #eff6ff);
+}
+
+.contact-card {
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.features-section {
+    background-color: #f0fdf4;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Common section spacing */
+.page-section {
+    padding: 4rem 0;
+}

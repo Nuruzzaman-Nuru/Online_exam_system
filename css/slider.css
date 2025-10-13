@@ -18,4 +18,57 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scale(1);
+    transition: transform 8s ease-in-out;
+}
+
+.slide.active img {
+    transform: scale(1.1);
+}
+
+/* Slider navigation */
+.slider-navigation {
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 20;
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.slider-dot:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.slider-dot.active {
+    opacity: 1;
+    transform: scale(1.2);
+    border-color: white;
+    background-color: transparent;
+}
+
+/* Overlay styles */
+.slider-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 10;
 }
